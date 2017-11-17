@@ -48,15 +48,30 @@ class Table(models.Model):
         return "{} ({} {})".format(self.name, self.game, self.limit)
 
 
+class Scanner(models.Model):
+    ip = models.GenericIPAddressField(unique=True)
+    name = models.CharField(max_length=20)
+
+
 class Scan(models.Model):
-    pass
+    scanner = models.ForeignKey(Scanner, related_name='scans')
+    datetime = models.DateTimeField(auto_now_add=True)
+    room = models.CharField(max_length=3, choices=POKER_ROOM)
 
 
 class TableScan(models.Model):
-    pass
+    scan = models.ForeignKey(Scan)
+    table = models.ForeignKey(Table)
+    player_count = models.SmallIntegerField(default=0)
+    average_pot = models.FloatField(default=0.0)
+    players_per_flop = models.SmallIntegerField(default=0)
+    hands_per_hour = models.SmallIntegerField(default=0)
+    unique_player_count = models.SmallIntegerField(default=0)
+    entry_count = models.SmallIntegerField(default=0)
 
 
 class PlayerScan(models.Model):
-    pass
+    player = models.ForeignKey(Player)
+    entries = models.SmallIntegerField()
 
 
