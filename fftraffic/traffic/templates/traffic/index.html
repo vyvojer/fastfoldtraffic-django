@@ -1,0 +1,25 @@
+{% load static %}
+{% if table_scans %}
+    <table>
+        <tr>
+            <td>Table</td>
+            <td>Plrs. (entries)</td>
+            <td>Unique plrs.</td>
+            <td>Avg. pot</td>
+            <td>Plrs/flop</td>
+            <td>Hands/hours</td>
+        </tr>
+        {% for scan in table_scans %}
+            <tr>
+                <td>{{ scan.table.name }}</td>
+                <td>{{ scan.entry_count }}</td>
+                <td>{{ scan.unique_player_count }}</td>
+                <td>{{ scan.average_pot }}</td>
+                <td>{{ scan.players_per_flop }}</td>
+                <td>{{ scan.hands_per_hour }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    No scans yet
+{% endif %}
