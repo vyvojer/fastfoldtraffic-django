@@ -52,8 +52,8 @@ class Table(models.Model):
 
 
 class Scanner(models.Model):
-    ip = models.GenericIPAddressField(unique=True)
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
+    ip = models.GenericIPAddressField(blank=True, null=True)
 
     def __str__(self):
         return "{}".format(self.ip)
@@ -69,12 +69,11 @@ class Scan(models.Model):
 
 
 class TableScan(models.Model):
-    scan = models.ForeignKey(Scan, related_name='tables')
+    scan = models.ForeignKey(Scan, related_name='table_scans')
     table = models.ForeignKey(Table, related_name='scans')
     player_count = models.SmallIntegerField(default=0)
     average_pot = models.FloatField(default=0.0)
     players_per_flop = models.SmallIntegerField(default=0)
-    hands_per_hour = models.SmallIntegerField(default=0)
     unique_player_count = models.SmallIntegerField(default=0)
     entry_count = models.SmallIntegerField(default=0)
 

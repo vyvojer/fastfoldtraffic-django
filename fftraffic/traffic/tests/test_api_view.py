@@ -11,6 +11,7 @@ client = Client()
 class UpdateViewTest(TestCase):
     def setUp(self):
         self.first_update = {
+            "scanner": "vultr1",
             "room": "PS",
             "tables": [
                 {

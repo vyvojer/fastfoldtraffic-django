@@ -3,12 +3,13 @@ import json
 from django.test import TestCase
 
 from traffic.serializers import ScanSerializer
-from traffic.models import Player, Country, Table, Scan, PlayerScan, TableScan
+from traffic.models import Player, Country, Table, Scanner, Scan, PlayerScan, TableScan
 
 
 class ScanSerializerTest(TestCase):
     def setUp(self):
         self.first_update = {
+            "scanner_name": "vultr1",
             "room": "PS",
             "tables": [
                 {
@@ -16,7 +17,6 @@ class ScanSerializerTest(TestCase):
                     "player_count": 7,
                     "average_pot": 25.0,
                     "players_per_flop": 13,
-                    "hands_per_hour": 221,
                     "unique_player_count": 4,
                     "entry_count": 7,
                     "players": [
@@ -47,7 +47,6 @@ class ScanSerializerTest(TestCase):
                     "player_count": 0,
                     "average_pot": 0,
                     "players_per_flop": 0,
-                    "hands_per_hour": 0,
                     "unique_player_count": 0,
                     "entry_count": 0,
                     "players": []
@@ -57,7 +56,6 @@ class ScanSerializerTest(TestCase):
                     "player_count": 9,
                     "average_pot": 6.0,
                     "players_per_flop": 17,
-                    "hands_per_hour": 238,
                     "unique_player_count": 7,
                     "entry_count": 9,
                     "players": [
@@ -102,10 +100,29 @@ class ScanSerializerTest(TestCase):
             ],
         }
 
-
     def test_first_update(self):
         scan_serialier = ScanSerializer(data=self.first_update)
         if scan_serialier.is_valid():
             scan_serialier.create(scan_serialier.validated_data)
+        scanners = Scanner.objects.all()
+        self.assertEqual(len(scanners), 1)
         scans = Scan.objects.all()
         self.assertEqual(len(scans), 1)
+        self.assertEqual(scans[0].scanner, scanners[0])
+        tables = Table.objects.all()
+        self.assertEqual(len(tables), 3)
+        table_scans = TableScan.objects.all()
+        self.assertEqual(len(table_scans), 3)
+        self.assertEqual(table_scans[0].table.name, 'Aenna')
+        self.assertEqual(table_scans[0].entry_count, 7)
+        countries = Country.objects.all()
+        self.assertEqual(len(countries), 6)
+        players = Player.objects.all()
+        self.assertEqual(len(players), 11)
+        player_scans = Player.objects.all()
+        self.assertEqual(len(player_scans), 11)
+
+        aenna = Table.objects.get(name='Aenna')
+        self.assertEqual(aenna.last_scan.scan, scans[0])
+        self.assertEqual(aenna.last_scan.entry_count, 7)
+
