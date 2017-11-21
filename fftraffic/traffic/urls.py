@@ -1,9 +1,11 @@
 from django.conf.urls import url, include
 
-from .views import index
+from . import views
 
 app_name = 'traffic'
 
 urlpatterns = [
-    url(r'^$', index, name='index'),
+    url(r'^$', views.index, name='index'),
+    url(r'^(?P<room>ps|pp)/(?P<table_name>\w+)/$', views.table, name='table'),
+    url(r'^api/v1/scans/$', views.update_scans, name='update_scans'),
 ]

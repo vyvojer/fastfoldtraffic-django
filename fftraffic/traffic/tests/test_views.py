@@ -8,8 +8,8 @@ client = Client()
 
 class IndexViewTest(TestCase):
     def setUp(self):
-        self.albania = Country.objects.create(name='Albania')
-        self.nigeria = Country.objects.create(name='Nigeria')
+        self.albania = Country.objects.create(iso='AL', name='Albania')
+        self.nigeria = Country.objects.create(iso='NI', name='Nigeria')
         self.pushkin = Player.objects.create(name='pushkin', country=self.nigeria)
         self.obama = Player.objects.create(name='obama', country=self.nigeria, room='PS')
         self.lenin = Player.objects.create(name='lenin', country=self.albania, room='PS')

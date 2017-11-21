@@ -15,7 +15,8 @@ GAMES = (
 
 
 class Country(models.Model):
-    name = models.CharField(unique=True, max_length=20)
+    iso = models.CharField(unique=True, max_length=2)
+    name = models.CharField(default='', max_length=20)
 
     def __str__(self):
         return self.name
