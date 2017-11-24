@@ -11,15 +11,15 @@ client = Client()
 class UpdateViewTest(TestCase):
     def setUp(self):
         self.first_update = {
-            "scanner": "vultr1",
+            "scanner_name": "vultr1",
             "room": "PS",
+            "datetime": "2017-11-24T01:23:25.843489",
             "tables": [
                 {
                     "name": "Aenna",
-                    "player_count": 7,
+                    "player_count": 8,
                     "average_pot": 25.0,
                     "players_per_flop": 13,
-                    "hands_per_hour": 221,
                     "unique_player_count": 4,
                     "entry_count": 7,
                     "players": [
@@ -50,7 +50,6 @@ class UpdateViewTest(TestCase):
                     "player_count": 0,
                     "average_pot": 0,
                     "players_per_flop": 0,
-                    "hands_per_hour": 0,
                     "unique_player_count": 0,
                     "entry_count": 0,
                     "players": []
@@ -60,7 +59,6 @@ class UpdateViewTest(TestCase):
                     "player_count": 9,
                     "average_pot": 6.0,
                     "players_per_flop": 17,
-                    "hands_per_hour": 238,
                     "unique_player_count": 7,
                     "entry_count": 9,
                     "players": [
@@ -76,7 +74,7 @@ class UpdateViewTest(TestCase):
                         },
                         {
                             "name": "77kol0bok77",
-                            "country": "RU",
+                            "country": None,
                             "entries": 2
                         },
                         {
@@ -105,7 +103,7 @@ class UpdateViewTest(TestCase):
             ],
         }
 
-    def _test_first_update(self):
+    def test_first_update(self):
         response = client.put(reverse('traffic:update_scans'),
                               data=json.dumps(self.first_update),
                               content_type='application/json')

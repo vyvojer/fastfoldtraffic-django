@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Table
+from .serializers import ScanSerializer
 # Create your views here.
 
 
@@ -23,4 +24,9 @@ def table(request, room, table_name):
 @api_view(['PUT'])
 def update_scans(request):
     if request.method == 'PUT':
-        return Response({})
+        scan_serializer = ScanSerializer(data=request.data)
+        if scan_serializer.is_valid():
+            scan_serializer.update(None, scan_serializer.data)
+            return Response(scan_serializer.data, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(scan_serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
