@@ -42,6 +42,7 @@ class Table(models.Model):
 
     class Meta:
         unique_together = ('room', 'name')
+        ordering = ('room', 'name')
 
     def __str__(self):
         return "{} ({} {})".format(self.name, self.game, self.limit)
