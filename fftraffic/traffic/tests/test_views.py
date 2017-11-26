@@ -34,7 +34,7 @@ class IndexViewTest(TestCase):
         response = client.get(reverse('traffic:index'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No scans yet")
-        self.assertEqual(list(response.context['table_scans']), [])
+        self.assertEqual(list(response.context['tables']), [])
 
     def test_after_first_scan(self):
         self.create_tables()
@@ -44,6 +44,6 @@ class IndexViewTest(TestCase):
         self.assertNotContains(response, "No scans yet")
         self.assertContains(response, "Aquarium")
         self.assertContains(response, "Kino")
-        self.assertEqual(list(response.context['table_scans']),
-                                 [self.table_scan_0_aquarium,
-                                  self.table_scan_0_kino])
+        self.assertEqual(list(response.context['tables']),
+                                 [self.aquarium,
+                                  self.kino])

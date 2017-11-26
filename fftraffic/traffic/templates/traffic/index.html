@@ -1,5 +1,5 @@
 {% load static %}
-{% if table_scans %}
+{% if tables %}
     <table>
         <tr>
             <td>Table</td>
@@ -9,14 +9,14 @@
             <td>Plrs/flop</td>
             <td>Hands/hours</td>
         </tr>
-        {% for scan in table_scans %}
+        {% for table in tables %}
             <tr>
-                <td>{{ scan.table.name }}</td>
-                <td>{{ scan.entry_count }}</td>
-                <td>{{ scan.unique_player_count }}</td>
-                <td>{{ scan.average_pot }}</td>
-                <td>{{ scan.players_per_flop }}</td>
-                <td>{{ scan.hands_per_hour }}</td>
+                <td>{{ table.last_scan.table.name }}</td>
+                <td>{{ table.last_scan.entry_count }}</td>
+                <td>{{ table.last_scan.unique_player_count }}</td>
+                <td>{{ table.last_scan.average_pot }}</td>
+                <td>{{ table.last_scan.players_per_flop }}</td>
+                <td>{{ table.last_scan.hands_per_hour }}</td>
             </tr>
         {% endfor %}
     </table>

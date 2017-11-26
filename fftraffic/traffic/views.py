@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views import generic
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -9,12 +10,13 @@ from .serializers import ScanSerializer
 # Create your views here.
 
 
-def index(request):
-    tables = Table.objects.all()
-    scanned_tables = [table.last_scan for table in tables if table.last_scan]
-    context = {'table_scans': scanned_tables}
-    template = 'traffic/index.html'
-    return render(request, template, context)
+class IndexView(generic.ListView):
+    template_name = 'traffic/index.html'
+    context_object_name = 'tables'
+
+    def get_queryset(self):
+        """ Return the tables, that have scans """
+        return Table.objects.filter(scans__isnull=False)
 
 
 def table(request, room, table_name):
