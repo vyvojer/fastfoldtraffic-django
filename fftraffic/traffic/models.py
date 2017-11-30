@@ -70,8 +70,8 @@ class Scan(models.Model):
 
 
 class TableScan(models.Model):
-    scan = models.ForeignKey(Scan, related_name='table_scans')
-    table = models.ForeignKey(Table, related_name='scans')
+    scan = models.ForeignKey(Scan, related_name='table_scans', on_delete=models.CASCADE)
+    table = models.ForeignKey(Table, related_name='scans', on_delete=models.CASCADE)
     player_count = models.SmallIntegerField(default=0)
     average_pot = models.FloatField(default=0.0)
     players_per_flop = models.SmallIntegerField(default=0)
@@ -83,8 +83,8 @@ class TableScan(models.Model):
 
 
 class PlayerScan(models.Model):
-    player = models.ForeignKey(Player, related_name='scans')
-    table_scan = models.ForeignKey(TableScan, related_name='players')
+    player = models.ForeignKey(Player, related_name='scans', on_delete=models.CASCADE)
+    table_scan = models.ForeignKey(TableScan, related_name='players', on_delete=models.CASCADE)
     entries = models.SmallIntegerField(default=1)
 
     def __str__(self):
