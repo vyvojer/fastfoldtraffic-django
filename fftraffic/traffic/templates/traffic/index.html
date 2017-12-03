@@ -7,17 +7,17 @@
             <td>Unique plrs.</td>
             <td>Avg. pot</td>
             <td>Plrs/flop</td>
-            <td>Hands/hours</td>
         </tr>
         {% for table in tables %}
-            <tr>
-                <td>{{ table.last_scan.table.name }}</td>
-                <td>{{ table.last_scan.entry_count }}</td>
-                <td>{{ table.last_scan.unique_player_count }}</td>
-                <td>{{ table.last_scan.average_pot }}</td>
-                <td>{{ table.last_scan.players_per_flop }}</td>
-                <td>{{ table.last_scan.hands_per_hour }}</td>
-            </tr>
+            {% if table.last_scan.entry_count > 0 %}
+                <tr>
+                    <td>{{ table.last_scan.table.name }}</td>
+                    <td>{{ table.last_scan.entry_count }}</td>
+                    <td>{{ table.last_scan.unique_player_count }}</td>
+                    <td>{{ table.last_scan.average_pot }}</td>
+                    <td>{{ table.last_scan.players_per_flop }}</td>
+                </tr>
+            {% endif %}
         {% endfor %}
     </table>
 {% else %}

@@ -16,7 +16,8 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """ Return the tables, that have scans """
-        return Table.objects.filter(scans__isnull=False)
+
+        return Table.objects.filter()
 
 
 def table(request, room, table_name):
@@ -31,4 +32,5 @@ def update_scans(request):
             scan_serializer.update(None, scan_serializer.data)
             return Response(scan_serializer.data, status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response(scan_serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+            print(scan_serializer.errors)
+            return Response(scan_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
