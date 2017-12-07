@@ -3,7 +3,7 @@ import logging
 from rest_framework import serializers
 
 from .models import Scanner, Scan, Table, TableScan, Country, Player, PlayerScan
-from .allowed import tables as allowed_tables
+from .allowed import ALLOWED_TABLES as allowed_tables
 
 logger = logging.getLogger('django')
 
