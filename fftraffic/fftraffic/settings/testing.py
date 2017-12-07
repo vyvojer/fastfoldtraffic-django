@@ -15,3 +15,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
+
+LOGGING['loggers']['django']['handlers'] = ['file', 'console']
