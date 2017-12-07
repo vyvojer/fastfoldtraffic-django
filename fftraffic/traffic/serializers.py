@@ -5,9 +5,7 @@ from rest_framework import serializers
 from .models import Scanner, Scan, Table, TableScan, Country, Player, PlayerScan
 from .allowed import tables as allowed_tables
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
-logger.setLevel(logging.DEBUG)
+logger = logging.getLogger('django')
 
 allowed = {(table[0], table[1]) for table in allowed_tables}
 
@@ -48,7 +46,6 @@ class ScanSerializer(serializers.Serializer):
         for table_data in tables_data:
             players_data = table_data.pop('players')
             table_name = table_data.pop('name')
-            logger.debug("{} {}".format(room, table_name))
             if (room, table_name) not in allowed:
                 logger.error("Attempt add strange table '{} {}'".format(room, table_name))
             else:

@@ -127,3 +127,42 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAdminUser', ],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
+
+LOGGING_SENDER_NAME = 'LOCALHOST'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s {} FFTRAFFIC-DJANGO: %(levelname)s - %(message)s'.format(LOGGING_SENDER_NAME),
+            'datefmt': '%Y-%m-%dT%H:%M:%S',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, '..', '..', 'logs', 'django.log'),
+            'formatter': 'simple'
+        },
+        'SysLog': {
+            'level': 'INFO',
+            'class': 'logging.handlers.SysLogHandler',
+            'formatter': 'simple',
+            'address': ('logs6.papertrailapp.com', 12590)
+        },
+        'console': {
+            'level': 'WARNING',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'SysLog', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
