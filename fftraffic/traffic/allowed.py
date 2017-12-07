@@ -30,3 +30,7 @@ ALLOWED_TABLES = [('PS', 'Aenna', 'NL', 200, 6),
                   ('PS', 'Thyestes', 'PLO', 25, 6),
                   ('PS', 'Triangulum', 'NL', 100, 6),
                   ('PS', 'Whirlpool', 'NL', 50, 9)]
+
+ALLOWED_COUNTRIES = [
+
+]
