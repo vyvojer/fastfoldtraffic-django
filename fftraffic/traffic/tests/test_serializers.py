@@ -167,6 +167,52 @@ class ScanSerializerTest(TestCase):
 
             ],
         }
+        self.bad_table = {
+            "scanner_name": "vultr1",
+            "room": "PS",
+            "datetime": "2017-11-24T01:23:25.843489",
+            "tables": [
+                {
+                    "name": "Aenna",
+                    "player_count": 8,
+                    "average_pot": 25.0,
+                    "players_per_flop": 13,
+                    "unique_player_count": 4,
+                    "entry_count": 7,
+                    "players": [
+                        {
+                            "name": "albert1804",
+                            "country": "RU",
+                            "entries": 1
+                        },
+                        {
+                            "name": "AMMADNAV",
+                            "country": "BE",
+                            "entries": 4
+                        },
+                        {
+                            "name": "Beebu",
+                            "country": "DE",
+                            "entries": 1
+                        },
+                        {
+                            "name": "Birdman8883",
+                            "country": "GB",
+                            "entries": 1
+                        },
+                    ],
+                },
+                {
+                    "name": "Pupu",
+                    "player_count": 0,
+                    "average_pot": 0,
+                    "players_per_flop": 0,
+                    "unique_player_count": 0,
+                    "entry_count": 0,
+                    "players": []
+                },
+            ],
+        }
 
     def test_first_update(self):
         scan_serialier = ScanSerializer(data=self.first_update)
@@ -202,12 +248,12 @@ class ScanSerializerTest(TestCase):
         self.assertEqual(kolobok.country.iso, 'UC')
 
     def test_second_update(self):
-        scan_serialier = ScanSerializer(data=self.first_update)
-        if scan_serialier.is_valid():
-            scan_serialier.update(None, scan_serialier.validated_data)
-        scan_serialier = ScanSerializer(data=self.second_update)
-        if scan_serialier.is_valid():
-            scan_serialier.update(None, scan_serialier.validated_data)
+        scan_serializer = ScanSerializer(data=self.first_update)
+        if scan_serializer.is_valid():
+            scan_serializer.update(None, scan_serializer.validated_data)
+        scan_serializer = ScanSerializer(data=self.second_update)
+        if scan_serializer.is_valid():
+            scan_serializer.update(None, scan_serializer.validated_data)
         scanners = Scanner.objects.all()
         self.assertEqual(len(scanners), 1)
         scans = Scan.objects.all()
@@ -218,4 +264,11 @@ class ScanSerializerTest(TestCase):
 
         kolobok = Player.objects.get(name='77kol0bok77')
         self.assertEqual(kolobok.country.iso, 'RU')
+
+    def test_bad_table(self):
+        scan_serializer = ScanSerializer(data=self.bad_table)
+        if scan_serializer.is_valid():
+            scan_serializer.update(None, scan_serializer.validated_data)
+        tables = Table.objects.all()
+        self.assertEqual(len(tables), 1)
 

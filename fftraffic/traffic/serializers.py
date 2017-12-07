@@ -1,6 +1,15 @@
+import logging
+
 from rest_framework import serializers
 
 from .models import Scanner, Scan, Table, TableScan, Country, Player, PlayerScan
+from .allowed import tables as allowed_tables
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
+logger.setLevel(logging.DEBUG)
+
+allowed = {(table[0], table[1]) for table in allowed_tables}
 
 
 class PlayerScanSerializer(serializers.Serializer):
@@ -39,24 +48,28 @@ class ScanSerializer(serializers.Serializer):
         for table_data in tables_data:
             players_data = table_data.pop('players')
             table_name = table_data.pop('name')
-            table, _ = Table.objects.get_or_create(name=table_name)
-            table_scan = TableScan.objects.create(scan=scan, table=table, **table_data)
-            for player_data in players_data:
-                iso = player_data.pop('country')
-                if not iso:
-                    iso = 'UC'
-                country, _ = Country.objects.get_or_create(iso=iso)
-                player_name = player_data.pop('name')
-                try:
-                    player = Player.objects.get(room=room, name=player_name)
-                except Player.DoesNotExist:
-                    player = Player.objects.create(room=room, name=player_name, country=country)
-                else:
-                    if player.country.iso == 'UC' and iso:
-                        player.country = country
-                        player.save()
+            logger.debug("{} {}".format(room, table_name))
+            if (room, table_name) not in allowed:
+                logger.error("Attempt add strange table '{} {}'".format(room, table_name))
+            else:
+                table, _ = Table.objects.get_or_create(name=table_name)
+                table_scan = TableScan.objects.create(scan=scan, table=table, **table_data)
+                for player_data in players_data:
+                    iso = player_data.pop('country')
+                    if not iso:
+                        iso = 'UC'
+                    country, _ = Country.objects.get_or_create(iso=iso)
+                    player_name = player_data.pop('name')
+                    try:
+                        player = Player.objects.get(room=room, name=player_name)
+                    except Player.DoesNotExist:
+                        player = Player.objects.create(room=room, name=player_name, country=country)
+                    else:
+                        if player.country.iso == 'UC' and iso:
+                            player.country = country
+                            player.save()
 
-                PlayerScan.objects.create(player=player, table_scan=table_scan, **player_data)
+                    PlayerScan.objects.create(player=player, table_scan=table_scan, **player_data)
 
 
 

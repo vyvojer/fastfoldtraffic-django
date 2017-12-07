@@ -55,7 +55,7 @@ class UpdateViewTest(TestCase):
                     "players": []
                 },
                 {
-                    "name": "Baade",
+                    "name": "Baades",
                     "player_count": 9,
                     "average_pot": 6.0,
                     "players_per_flop": 17,

@@ -31,7 +31,7 @@ class Player(models.Model):
         unique_together = ('room', 'name')
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.country)
+        return "{}".format(self.name)
 
 
 class Table(models.Model):
@@ -39,13 +39,14 @@ class Table(models.Model):
     name = models.CharField(max_length=15)
     game = models.CharField(max_length=4, choices=GAMES, default=GAMES[0][0])
     limit = models.IntegerField(default=0)
+    max_players = models.IntegerField(default=6)
 
     class Meta:
         unique_together = ('room', 'name')
         ordering = ('room', 'name')
 
     def __str__(self):
-        return "{} ({} {})".format(self.name, self.game, self.limit)
+        return "{} ({}{}) {}max".format(self.name, self.game, self.limit, self.max_players)
 
     @property
     def last_scan(self):
@@ -57,11 +58,11 @@ class Scanner(models.Model):
     ip = models.GenericIPAddressField(blank=True, null=True)
 
     def __str__(self):
-        return "{}".format(self.ip)
+        return "{}".format(self.name)
 
 
 class Scan(models.Model):
-    scanner = models.ForeignKey(Scanner, related_name='scans')
+    scanner = models.ForeignKey(Scanner, related_name='scans', on_delete=models.CASCADE)
     datetime = models.DateTimeField(auto_now_add=True)
     room = models.CharField(max_length=3, choices=ROOMS, default=ROOMS[0][0])
 
