@@ -12,8 +12,10 @@ class Command(BaseCommand):
             name = table_allowed[1]
             game = table_allowed[2]
             limit = table_allowed[3]
+            max_players = table_allowed[4]
             table, _ = Table.objects.get_or_create(room=room, name=name)
             table.game = game
             table.limit = limit
+            table.max_players = max_players
             table.save()
 
