@@ -47,7 +47,7 @@ class ScanSerializer(serializers.Serializer):
             players_data = table_data.pop('players')
             table_name = table_data.pop('name')
             if (room, table_name) not in allowed:
-                logger.error("Attempt add strange table '{} {}'".format(room, table_name))
+                logger.error("Attempt add not allowed table '{} {}'".format(room, table_name))
             else:
                 table, _ = Table.objects.get_or_create(name=table_name)
                 table_scan = TableScan.objects.create(scan=scan, table=table, **table_data)
@@ -67,6 +67,8 @@ class ScanSerializer(serializers.Serializer):
                             player.save()
 
                     PlayerScan.objects.create(player=player, table_scan=table_scan, **player_data)
+
+        logger.info("Scanner '%s' just uploaded info about %s tables", scanner_name, len(tables_data))
 
 
 
