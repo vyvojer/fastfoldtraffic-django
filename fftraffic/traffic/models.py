@@ -18,8 +18,12 @@ class Country(models.Model):
     iso = models.CharField(unique=True, max_length=2)
     name = models.CharField(default='', max_length=20)
 
+    class Meta:
+        ordering = ('name',)
+        verbose_name_plural = 'countries'
+
     def __str__(self):
-        return self.name
+        return "{} {}".format(self.iso, self.name)
 
 
 class Player(models.Model):
@@ -43,10 +47,10 @@ class Table(models.Model):
 
     class Meta:
         unique_together = ('room', 'name')
-        ordering = ('room', 'name')
+        ordering = ('room', 'game', 'max_players', 'limit',)
 
     def __str__(self):
-        return "{} ({}{}) {}max".format(self.name, self.game, self.limit, self.max_players)
+        return "{} [{} {}] {} max".format(self.name, self.game, self.limit, self.max_players)
 
     @property
     def last_scan(self):
