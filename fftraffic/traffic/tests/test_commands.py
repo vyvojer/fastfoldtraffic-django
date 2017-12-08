@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core import management
 
-from traffic.allowed import ALLOWED_TABLES
+from traffic.allowed import ALLOWED_TABLES, ALLOWED_COUNTRIES
 from traffic.models import Table, Country
 
 
@@ -42,7 +42,7 @@ class PopulateTest(TestCase):
         self.assertEqual(gotha.limit, 100)
         self.assertEqual(gotha.max_players, 6)
 
-    def test_empty_contries(self):
+    def test_empty_countries(self):
         """ Populate empty contries"""
         management.call_command('populate')
         countries = Country.objects.all()
