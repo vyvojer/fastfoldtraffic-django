@@ -1,4 +1,7 @@
+{% extends "base.html" %}
 {% load static %}
+{% block title %}Active tables{% endblock %}
+{% block body %}
 {% if tables %}
     <table>
         <tr>
@@ -23,3 +26,4 @@
 {% else %}
     No scans yet
 {% endif %}
+{% endblock %}
