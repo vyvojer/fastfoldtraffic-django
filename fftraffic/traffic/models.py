@@ -16,7 +16,7 @@ GAMES = (
 
 class Country(models.Model):
     iso = models.CharField(unique=True, max_length=2)
-    name = models.CharField(default='', max_length=20)
+    name = models.CharField(default='', max_length=60)
 
     class Meta:
         ordering = ('name',)
@@ -28,7 +28,7 @@ class Country(models.Model):
 
 class Player(models.Model):
     room = models.CharField(max_length=3, choices=ROOMS, default=ROOMS[0][0])
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=20)
     country = models.ForeignKey(Country)
 
     class Meta:
