@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^o5h6-@!%mbu!25xwma5w0b3&_hnw1siw_y_f7k(==se#_#fma'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['192.168.1.150']
 
@@ -76,11 +77,11 @@ WSGI_APPLICATION = 'fftraffic.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'fftraffic',
-        'HOST': 'localhost',
+        'NAME': config('DB_NAME'),
+        'HOST': config('DB_HOST'),
         'PORT': '',
-        'USER': 'django',
-        'PASSWORD': 'lsjelsx32dlsDs'
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
     }
 }
 
@@ -154,7 +155,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.handlers.SysLogHandler',
             'formatter': 'simple',
-            'address': ('logs6.papertrailapp.com', 12590)
+            'address': (config('PAPERTRAIL_HOST'), config('PAPERTRAIL_PORT', cast=int))
         },
         'console': {
             'level': 'WARNING',

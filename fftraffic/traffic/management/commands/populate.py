@@ -1,4 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.contrib.auth.models import User
+
+from decouple import config
+
 from traffic.models import Table, Country
 from traffic.allowed import ALLOWED_TABLES, ALLOWED_COUNTRIES
 
@@ -26,3 +30,19 @@ class Command(BaseCommand):
             country.name = name
             country.save()
 
+        self._create_users()
+
+    def _create_users(self):
+        try:
+            User.objects.get(username=config('DJANGO_SUPERUSER'), )
+        except User.DoesNotExist:
+            User.objects.create_superuser(username=config('DJANGO_SUPERUSER'),
+                                          email=config('DJANGO_SUPERUSER_EMAIL'),
+                                          password=config('DJANGO_SUPERUSER_PASSWORD'))
+        try:
+            User.objects.get(username=config('DJANGO_USER'), )
+        except User.DoesNotExist:
+            scanner = User.objects.create_user(username=config('DJANGO_USER'),
+                                               email=config('DJANGO_SUPERUSER_EMAIL'),
+                                               password=config('DJANGO_USER_PASSWORD'))
+            scanner.is_staff = True

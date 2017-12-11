@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.core import management
+from django.contrib.auth.models import User
 
 from traffic.allowed import ALLOWED_TABLES, ALLOWED_COUNTRIES
 from traffic.models import Table, Country
@@ -47,5 +48,15 @@ class PopulateTest(TestCase):
         management.call_command('populate')
         countries = Country.objects.all()
         self.assertEqual(len(countries), len(ALLOWED_COUNTRIES))
+
+    def test_users(self):
+        users = User.objects.all()
+        self.assertEqual(len(users), 0)
+        management.call_command('populate')
+        users = User.objects.all()
+        self.assertEqual(len(users), 2)
+        management.call_command('populate')
+        users = User.objects.all()
+        self.assertEqual(len(users), 2)
 
 
