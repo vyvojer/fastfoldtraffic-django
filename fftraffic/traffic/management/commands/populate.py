@@ -32,7 +32,8 @@ class Command(BaseCommand):
 
         self._create_users()
 
-    def _create_users(self):
+    @staticmethod
+    def _create_users():
         try:
             User.objects.get(username=config('DJANGO_SUPERUSER'), )
         except User.DoesNotExist:
@@ -40,9 +41,10 @@ class Command(BaseCommand):
                                           email=config('DJANGO_SUPERUSER_EMAIL'),
                                           password=config('DJANGO_SUPERUSER_PASSWORD'))
         try:
-            User.objects.get(username=config('DJANGO_USER'), )
+            scanner = User.objects.get(username=config('DJANGO_USER'), )
         except User.DoesNotExist:
             scanner = User.objects.create_user(username=config('DJANGO_USER'),
                                                email=config('DJANGO_SUPERUSER_EMAIL'),
                                                password=config('DJANGO_USER_PASSWORD'))
-            scanner.is_staff = True
+        scanner.is_staff = True
+        scanner.save()
