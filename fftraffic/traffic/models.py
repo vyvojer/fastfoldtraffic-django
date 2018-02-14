@@ -29,7 +29,7 @@ class Country(models.Model):
 class Player(models.Model):
     room = models.CharField(max_length=3, choices=ROOMS, default=ROOMS[0][0])
     name = models.CharField(max_length=20)
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('room', 'name')
@@ -51,6 +51,13 @@ class Table(models.Model):
 
     def __str__(self):
         return "{} [{} {}] {} max".format(self.name, self.game, self.limit, self.max_players)
+
+    def limit_str(self):
+        if self.max_players != 6:
+            max_str = '({}m)'.format(self.max_players)
+        else:
+            max_str = ''
+        return "{} {} {}".format(self.game, self.limit, max_str)
 
     @property
     def last_scan(self):
