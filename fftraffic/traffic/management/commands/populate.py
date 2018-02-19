@@ -41,10 +41,10 @@ class Command(BaseCommand):
                                           email=config('DJANGO_SUPERUSER_EMAIL'),
                                           password=config('DJANGO_SUPERUSER_PASSWORD'))
         try:
-            scanner = User.objects.get(username=config('DJANGO_USER'), )
+            scanner = User.objects.get(username=config('DJANGO_SCANNER_USER'), )
         except User.DoesNotExist:
-            scanner = User.objects.create_user(username=config('DJANGO_USER'),
+            scanner = User.objects.create_user(username=config('DJANGO_SCANNER_USER'),
                                                email=config('DJANGO_SUPERUSER_EMAIL'),
-                                               password=config('DJANGO_USER_PASSWORD'))
+                                               password=config('DJANGO_SCANNER_PASSWORD'))
         scanner.is_staff = True
         scanner.save()
