@@ -74,8 +74,11 @@ class Scanner(models.Model):
 
 class Scan(models.Model):
     scanner = models.ForeignKey(Scanner, related_name='scans', on_delete=models.CASCADE)
-    datetime = models.DateTimeField(auto_now_add=True)
+    datetime = models.DateTimeField()
     room = models.CharField(max_length=3, choices=ROOMS, default=ROOMS[0][0])
+
+    class Meta:
+        ordering = ('datetime',)
 
     def __str__(self):
         return "{} {}".format(self.scanner, self.datetime)

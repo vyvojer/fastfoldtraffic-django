@@ -223,6 +223,10 @@ class ScanSerializerTest(TestCase):
         scans = Scan.objects.all()
         self.assertEqual(len(scans), 1)
         self.assertEqual(scans[0].scanner, scanners[0])
+        scan = scans[0]
+        self.assertEqual(scan.datetime.year, 2017)
+        self.assertEqual(scan.datetime.month, 11)
+        self.assertEqual(scan.datetime.day, 24)
         tables = Table.objects.all()
         self.assertEqual(len(tables), 3)
         table_scans = TableScan.objects.all()

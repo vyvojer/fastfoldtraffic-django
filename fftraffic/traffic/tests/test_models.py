@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.test import TestCase
 from traffic.models import Country, Player, Table, Scanner, Scan, TableScan, PlayerScan
 
@@ -27,8 +28,8 @@ class ScanTest(TestCase):
         self.aquarium = Table.objects.create(name='Aquarium')
         self.kino = Table.objects.create(name='Kino')
         self.scanner = Scanner.objects.create(ip='192.168.0.1', name='main')
-        self.scan_0 = Scan.objects.create(scanner=self.scanner)
-        self.scan_1 = Scan.objects.create(scanner=self.scanner)
+        self.scan_0 = Scan.objects.create(scanner=self.scanner, datetime=timezone.now())
+        self.scan_1 = Scan.objects.create(scanner=self.scanner, datetime=timezone.now())
         self.table_scan_0_aquarium = TableScan.objects.create(scan=self.scan_0, table=self.aquarium, player_count=2)
         self.table_scan_0_kino = TableScan.objects.create(scan=self.scan_0, table=self.kino, player_count=2)
         self.table_scan_1_aquarium = TableScan.objects.create(scan=self.scan_1, table=self.aquarium, player_count=3)
