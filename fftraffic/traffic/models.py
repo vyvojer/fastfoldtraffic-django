@@ -61,7 +61,7 @@ class Table(models.Model):
 
     @property
     def last_scan(self):
-        return self.scans.last()
+        return self.table_scans.latest('scan__datetime')
 
 
 class Scanner(models.Model):
@@ -77,16 +77,13 @@ class Scan(models.Model):
     datetime = models.DateTimeField()
     room = models.CharField(max_length=3, choices=ROOMS, default=ROOMS[0][0])
 
-    class Meta:
-        ordering = ('datetime',)
-
     def __str__(self):
-        return "{} {}".format(self.scanner, self.datetime)
+        return "{} {:%Y-%m-%d %H-%M-%S}".format(self.scanner, self.datetime)
 
 
 class TableScan(models.Model):
     scan = models.ForeignKey(Scan, related_name='table_scans', on_delete=models.CASCADE)
-    table = models.ForeignKey(Table, related_name='scans', on_delete=models.CASCADE)
+    table = models.ForeignKey(Table, related_name='table_scans', on_delete=models.CASCADE)
     player_count = models.SmallIntegerField(default=0)
     average_pot = models.FloatField(default=0.0)
     players_per_flop = models.SmallIntegerField(default=0)
@@ -94,7 +91,7 @@ class TableScan(models.Model):
     entry_count = models.SmallIntegerField(default=0)
 
     def __str__(self):
-        return "{} players={}".format(self.table, self.player_count)
+        return "{} players={} datetime={:%Y-%m-%d %H-%M-%S}".format(self.table, self.player_count, self.scan.datetime)
 
 
 class PlayerScan(models.Model):

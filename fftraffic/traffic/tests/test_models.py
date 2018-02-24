@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.utils import timezone
 from django.test import TestCase
 from traffic.models import Country, Player, Table, Scanner, Scan, TableScan, PlayerScan
@@ -28,19 +30,25 @@ class ScanTest(TestCase):
         self.aquarium = Table.objects.create(name='Aquarium')
         self.kino = Table.objects.create(name='Kino')
         self.scanner = Scanner.objects.create(ip='192.168.0.1', name='main')
-        self.scan_0 = Scan.objects.create(scanner=self.scanner, datetime=timezone.now())
-        self.scan_1 = Scan.objects.create(scanner=self.scanner, datetime=timezone.now())
+        now = timezone.now()
+        self.scan_0 = Scan.objects.create(scanner=self.scanner, datetime=now - timedelta(hours=1))
+        self.scan_2 = Scan.objects.create(scanner=self.scanner, datetime=now + timedelta(hours=1))
+        self.scan_1 = Scan.objects.create(scanner=self.scanner, datetime=now)
         self.table_scan_0_aquarium = TableScan.objects.create(scan=self.scan_0, table=self.aquarium, player_count=2)
         self.table_scan_0_kino = TableScan.objects.create(scan=self.scan_0, table=self.kino, player_count=2)
         self.table_scan_1_aquarium = TableScan.objects.create(scan=self.scan_1, table=self.aquarium, player_count=3)
         self.table_scan_1_kino = TableScan.objects.create(scan=self.scan_1, table=self.kino, player_count=3)
+        self.table_scan_2_aquarium = TableScan.objects.create(scan=self.scan_2, table=self.aquarium, player_count=3)
+        self.table_scan_2_kino = TableScan.objects.create(scan=self.scan_2, table=self.kino, player_count=3)
 
     def test_scan(self):
         self.assertEqual(self.scanner.scans.all()[0], self.scan_0)
-        self.assertEqual(self.scanner.scans.all()[1], self.scan_1)
-        self.assertEqual(list(self.aquarium.scans.all()), [self.table_scan_0_aquarium, self.table_scan_1_aquarium])
+        self.assertEqual(self.scanner.scans.all()[1], self.scan_2)
+        self.assertEqual(list(self.aquarium.table_scans.all()), [self.table_scan_0_aquarium,
+                                                           self.table_scan_1_aquarium,
+                                                           self.table_scan_2_aquarium])
 
     def test_table_last_scan(self):
-        self.assertEqual(self.aquarium.last_scan, self.table_scan_1_aquarium)
-        self.assertEqual(self.kino.last_scan, self.table_scan_1_kino)
+        self.assertEqual(self.aquarium.last_scan, self.table_scan_2_aquarium)
+        self.assertEqual(self.kino.last_scan, self.table_scan_2_kino)
 

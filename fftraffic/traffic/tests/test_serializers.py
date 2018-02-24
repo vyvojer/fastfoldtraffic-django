@@ -11,7 +11,7 @@ class ScanSerializerTest(TestCase):
         self.first_update = {
             "scanner_name": "vultr1",
             "room": "PS",
-            "datetime": "2017-11-24T01:23:25.843489",
+            "datetime": "2017-11-24T01:24:25.843489",
             "tables": [
                 {
                     "name": "Aenna",
@@ -264,7 +264,7 @@ class ScanSerializerTest(TestCase):
         self.assertEqual(len(scans), 2)
 
         baade = Table.objects.get(name='Baade')
-        self.assertEqual(baade.last_scan.scan, scans[1])
+        self.assertEqual(baade.last_scan.scan, scans[0])  # first update is older than second
 
         kolobok = Player.objects.get(name='77kol0bok77')
         self.assertEqual(kolobok.country.iso, 'RU')
