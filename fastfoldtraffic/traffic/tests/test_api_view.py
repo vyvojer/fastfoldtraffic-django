@@ -22,6 +22,7 @@ class UpdateViewTest(TestCase):
                     "players_per_flop": 13,
                     "unique_player_count": 4,
                     "entry_count": 7,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": [
                         {
                             "name": "albert1804",
@@ -52,6 +53,7 @@ class UpdateViewTest(TestCase):
                     "players_per_flop": 0,
                     "unique_player_count": 0,
                     "entry_count": 0,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": []
                 },
                 {
@@ -61,6 +63,7 @@ class UpdateViewTest(TestCase):
                     "players_per_flop": 17,
                     "unique_player_count": 7,
                     "entry_count": 9,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": [
                         {
                             "name": "$teve45",

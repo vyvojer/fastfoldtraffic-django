@@ -1,9 +1,12 @@
+from datetime import timedelta
+
 from django.test import TestCase
 from django.core import management
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from traffic.allowed import ALLOWED_TABLES, ALLOWED_COUNTRIES
-from traffic.models import Table, Country
+from traffic.models import Table, Country, Player, Scan, Scanner, TableScan
 
 
 class PopulateTest(TestCase):
@@ -58,5 +61,38 @@ class PopulateTest(TestCase):
         management.call_command('populate')
         users = User.objects.all()
         self.assertEqual(len(users), 2)
+
+
+class RepairDatetimeTest(TestCase):
+
+    def setUp(self):
+        self.now = timezone.now()
+        self.old_time = self.now - timedelta(hours=8)
+        self.albania = Country.objects.create(iso='AL', name='Albania')
+        self.nigeria = Country.objects.create(iso='NI', name='Nigeria')
+        self.pushkin = Player.objects.create(name='pushkin', country=self.nigeria)
+        self.obama = Player.objects.create(name='obama', country=self.nigeria, room='PS')
+        self.lenin = Player.objects.create(name='lenin', country=self.albania, room='PS')
+        self.aquarium = Table.objects.create(name='Aquarium')
+        self.kino = Table.objects.create(name='Kino')
+        self.scanner = Scanner.objects.create(ip='192.168.0.1', name='main')
+        self.scan_1 = Scan.objects.create(scanner=self.scanner, datetime=self.now)
+        self.table_scan_0_aquarium = TableScan.objects.create(scan=self.scan_1,
+                                                              table=self.aquarium,
+                                                              player_count=2)
+        self.table_scan_0_kino = TableScan.objects.create(scan=self.scan_1,
+                                                          table=self.kino,
+                                                          player_count=2,
+                                                          datetime=self.old_time)
+
+    def testRepair(self):
+        table_scans = TableScan.objects.all().order_by('table__name')
+        self.assertNotEqual(table_scans[0].datetime, self.now)
+        self.assertEqual(table_scans[1].datetime, self.old_time)
+        management.call_command('repair_datetime')
+        table_scans = TableScan.objects.all().order_by('table__name')
+        self.assertEqual(table_scans[0].datetime, self.now)
+        self.assertEqual(table_scans[1].datetime, self.old_time)
+
 
 

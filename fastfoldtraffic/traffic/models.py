@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -61,7 +62,7 @@ class Table(models.Model):
 
     @property
     def last_scan(self):
-        return self.table_scans.latest('scan__datetime')
+        return self.table_scans.latest('datetime')
 
 
 class Scanner(models.Model):
@@ -84,6 +85,7 @@ class Scan(models.Model):
 class TableScan(models.Model):
     scan = models.ForeignKey(Scan, related_name='table_scans', on_delete=models.CASCADE)
     table = models.ForeignKey(Table, related_name='table_scans', on_delete=models.CASCADE)
+    datetime = models.DateTimeField(default=timezone.now, blank=True)
     player_count = models.SmallIntegerField(default=0)
     average_pot = models.FloatField(default=0.0)
     players_per_flop = models.SmallIntegerField(default=0)

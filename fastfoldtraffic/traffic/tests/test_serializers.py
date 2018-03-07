@@ -20,6 +20,7 @@ class ScanSerializerTest(TestCase):
                     "players_per_flop": 13,
                     "unique_player_count": 4,
                     "entry_count": 7,
+                    "datetime": "2017-11-24T01:22:25.843489",
                     "players": [
                         {
                             "name": "albert1804",
@@ -50,6 +51,7 @@ class ScanSerializerTest(TestCase):
                     "players_per_flop": 0,
                     "unique_player_count": 0,
                     "entry_count": 0,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": []
                 },
                 {
@@ -59,6 +61,7 @@ class ScanSerializerTest(TestCase):
                     "players_per_flop": 17,
                     "unique_player_count": 7,
                     "entry_count": 9,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": [
                         {
                             "name": "$teve45",
@@ -112,6 +115,7 @@ class ScanSerializerTest(TestCase):
                     "players_per_flop": 0,
                     "unique_player_count": 0,
                     "entry_count": 0,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": []
                 },
                 {
@@ -122,6 +126,7 @@ class ScanSerializerTest(TestCase):
                     "hands_per_hour": 0,
                     "unique_player_count": 0,
                     "entry_count": 0,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": []
                 },
                 {
@@ -131,6 +136,7 @@ class ScanSerializerTest(TestCase):
                     "players_per_flop": 17,
                     "unique_player_count": 7,
                     "entry_count": 9,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": [
                         {
                             "name": "$teve45",
@@ -179,6 +185,7 @@ class ScanSerializerTest(TestCase):
                     "players_per_flop": 13,
                     "unique_player_count": 4,
                     "entry_count": 7,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": [
                         {
                             "name": "albert1804",
@@ -209,6 +216,7 @@ class ScanSerializerTest(TestCase):
                     "players_per_flop": 0,
                     "unique_player_count": 0,
                     "entry_count": 0,
+                    "datetime": "2017-11-24T01:23:25.843489",
                     "players": []
                 },
             ],
@@ -223,6 +231,7 @@ class ScanSerializerTest(TestCase):
         scans = Scan.objects.all()
         self.assertEqual(len(scans), 1)
         self.assertEqual(scans[0].scanner, scanners[0])
+        self.assertEqual(scans[0].datetime.minute, 24)
         scan = scans[0]
         self.assertEqual(scan.datetime.year, 2017)
         self.assertEqual(scan.datetime.month, 11)
@@ -232,7 +241,11 @@ class ScanSerializerTest(TestCase):
         table_scans = TableScan.objects.all()
         self.assertEqual(len(table_scans), 3)
         self.assertEqual(table_scans[0].table.name, 'Aenna')
+        self.assertEqual(table_scans[0].datetime.year, 2017)
+        self.assertEqual(table_scans[0].datetime.minute, 22)
         self.assertEqual(table_scans[0].entry_count, 7)
+        self.assertEqual(table_scans[2].table.name, 'Baade')
+        self.assertEqual(table_scans[2].datetime.minute, 23)
         countries = Country.objects.all()
         self.assertEqual(len(countries), 7)
         players = Player.objects.all()

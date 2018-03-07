@@ -23,6 +23,7 @@ class TableScanSerializer(serializers.Serializer):
     players_per_flop = serializers.IntegerField()
     unique_player_count = serializers.IntegerField()
     entry_count = serializers.IntegerField()
+    datetime = serializers.DateTimeField(allow_null=True)
     players = PlayerScanSerializer(many=True)
 
 
@@ -40,7 +41,7 @@ class ScanSerializer(serializers.Serializer):
         scanner_name = validated_data.pop('scanner_name')
         room = validated_data.get('room')
         if validated_data.get('datetime') is None:
-            validated_data.pot('datetime')
+            validated_data.pop('datetime')
         scanner, _ = Scanner.objects.get_or_create(name=scanner_name)
         scan = Scan.objects.create(scanner=scanner, **validated_data)
         for table_data in tables_data:
