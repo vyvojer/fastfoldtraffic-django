@@ -93,7 +93,10 @@ class TableScan(models.Model):
     entry_count = models.SmallIntegerField(default=0)
 
     def __str__(self):
-        return "{} players={} datetime={:%Y-%m-%d %H-%M-%S}".format(self.table, self.player_count, self.scan.datetime)
+        return "{} players={} {:%Y-%m-%d %H-%M-%S}/{:%Y-%m-%d %H-%M-%S}".format(self.table,
+                                                                                self.player_count,
+                                                                                self.datetime,
+                                                                                self.scan.datetime)
 
 
 class PlayerScan(models.Model):
