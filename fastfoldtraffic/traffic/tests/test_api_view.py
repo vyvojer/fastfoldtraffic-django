@@ -12,8 +12,10 @@ class UpdateViewTest(TestCase):
     def setUp(self):
         self.first_update = {
             "scanner_name": "vultr1",
+            "full": True,
             "room": "PS",
-            "datetime": "2017-11-24T01:23:25.843489",
+            "start_datetime": "2017-11-24T01:04:25.843489",
+            "end_datetime": "2017-11-24T01:14:25.843489",
             "tables": [
                 {
                     "name": "Aenna",

@@ -76,7 +76,7 @@ class RepairDatetimeTest(TestCase):
         self.aquarium = Table.objects.create(name='Aquarium')
         self.kino = Table.objects.create(name='Kino')
         self.scanner = Scanner.objects.create(ip='192.168.0.1', name='main')
-        self.scan_1 = Scan.objects.create(scanner=self.scanner, datetime=self.now)
+        self.scan_1 = Scan.objects.create(scanner=self.scanner, end_datetime=self.now)
         self.table_scan_0_aquarium = TableScan.objects.create(scan=self.scan_1,
                                                               table=self.aquarium,
                                                               player_count=2)
@@ -85,14 +85,7 @@ class RepairDatetimeTest(TestCase):
                                                           player_count=2,
                                                           datetime=self.old_time)
 
-    def testRepair(self):
-        table_scans = TableScan.objects.all().order_by('table__name')
-        self.assertNotEqual(table_scans[0].datetime, self.now)
-        self.assertEqual(table_scans[1].datetime, self.old_time)
-        management.call_command('repair_datetime')
-        table_scans = TableScan.objects.all().order_by('table__name')
-        self.assertEqual(table_scans[0].datetime, self.now)
-        self.assertEqual(table_scans[1].datetime, self.old_time)
+
 
 
 

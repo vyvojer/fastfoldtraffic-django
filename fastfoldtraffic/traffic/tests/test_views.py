@@ -21,7 +21,7 @@ class IndexViewTest(TestCase):
         self.kino = Table.objects.create(name='Kino')
 
     def make_first_scan(self):
-        self.scan_0 = Scan.objects.create(scanner=self.scanner, datetime=timezone.now())
+        self.scan_0 = Scan.objects.create(scanner=self.scanner, end_datetime=timezone.now())
         self.table_scan_0_aquarium = TableScan.objects.create(scan=self.scan_0, table=self.aquarium, entry_count=2,
                                                               player_count=2)
         self.table_scan_0_kino = TableScan.objects.create(scan=self.scan_0, table=self.kino, entry_count=3,

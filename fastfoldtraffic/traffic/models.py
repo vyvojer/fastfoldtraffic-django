@@ -64,6 +64,28 @@ class Table(models.Model):
     def last_scan(self):
         return self.table_scans.latest('datetime')
 
+    @property
+    def mtr(self):
+        return self.last_scan.entry_count / self.last_scan.unique_player_count
+
+    @property
+    def avg_pot(self):
+        return self.table_scans.aggregate(models.Avg('average_pot'))['average_pot__avg']
+
+    @property
+    def avg_entry_count(self):
+        return self.table_scans.aggregate(models.Avg('entry_count'))['entry_count__avg']
+
+    @property
+    def avg_unique_player_count(self):
+        return self.table_scans.aggregate(models.Avg('unique_player_count'))['unique_player_count__avg']
+
+    @property
+    def avg_mtr(self):
+        e = self.table_scans.aggregate(models.Sum('entry_count'))['entry_count__sum']
+        p = self.table_scans.aggregate(models.Sum('unique_player_count'))['unique_player_count__sum']
+        return e / p
+
 
 class Scanner(models.Model):
     name = models.CharField(max_length=20, unique=True)
@@ -75,11 +97,13 @@ class Scanner(models.Model):
 
 class Scan(models.Model):
     scanner = models.ForeignKey(Scanner, related_name='scans', on_delete=models.CASCADE)
-    datetime = models.DateTimeField()
+    full = models.BooleanField(default=True)
+    start_datetime = models.DateTimeField(default=timezone.now)
+    end_datetime = models.DateTimeField(default=timezone.now)
     room = models.CharField(max_length=3, choices=ROOMS, default=ROOMS[0][0])
 
     def __str__(self):
-        return "{} {:%Y-%m-%d %H-%M-%S}".format(self.scanner, self.datetime)
+        return "{} {:%Y-%m-%d %H-%M-%S}".format(self.scanner, self.end_datetime)
 
 
 class TableScan(models.Model):
@@ -96,7 +120,7 @@ class TableScan(models.Model):
         return "{} players={} {:%Y-%m-%d %H-%M-%S}/{:%Y-%m-%d %H-%M-%S}".format(self.table,
                                                                                 self.player_count,
                                                                                 self.datetime,
-                                                                                self.scan.datetime)
+                                                                                self.scan.end_datetime)
 
 
 class PlayerScan(models.Model):

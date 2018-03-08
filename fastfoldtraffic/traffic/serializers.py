@@ -30,7 +30,9 @@ class TableScanSerializer(serializers.Serializer):
 class ScanSerializer(serializers.Serializer):
     scanner_name = serializers.CharField(max_length=20)
     room = serializers.CharField(max_length=3)
-    datetime = serializers.DateTimeField(allow_null=True)  #  use datetime.datetime.now().isoformat()
+    full = serializers.BooleanField()
+    start_datetime = serializers.DateTimeField(allow_null=True)
+    end_datetime = serializers.DateTimeField(allow_null=True)  #  use datetime.datetime.now().isoformat()
     tables = TableScanSerializer(many=True)
 
     def create(self, validated_data):
@@ -40,10 +42,12 @@ class ScanSerializer(serializers.Serializer):
         tables_data = validated_data.pop('tables')
         scanner_name = validated_data.pop('scanner_name')
         room = validated_data.get('room')
-        if validated_data.get('datetime') is None:
-            validated_data.pop('datetime')
+        start_datetime = validated_data.pop('start_datetime')
         scanner, _ = Scanner.objects.get_or_create(name=scanner_name)
-        scan = Scan.objects.create(scanner=scanner, **validated_data)
+        scan, _ = Scan.objects.get_or_create(scanner=scanner, start_datetime=start_datetime)
+        scan.end_datetime = validated_data.pop('end_datetime')
+        scan.full = validated_data.pop('full')
+        scan.save()
         for table_data in tables_data:
             players_data = table_data.pop('players')
             table_name = table_data.pop('name')
