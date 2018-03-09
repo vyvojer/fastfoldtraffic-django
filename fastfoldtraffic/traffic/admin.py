@@ -5,15 +5,23 @@ from .models import Player, Table, Scanner, Scan, TableScan, Country
 
 
 class TableAdmin(admin.ModelAdmin):
-    list_display = ('name', 'game', 'limit', 'max_players', 'last_table_scan_datetime', 'last_scan_datetime')
-
-    @staticmethod
-    def last_table_scan_datetime(table):
-        return '{:%Y-%m-%d %H-%M-%S}'.format(table.last_scan.datetime)
+    list_display = ('__str__',
+                    'scan_count',
+                    'avg_pot_',
+                    'avg_mtr_',
+                    'last_scan_datetime')
 
     @staticmethod
     def last_scan_datetime(table):
         return '{:%Y-%m-%d %H-%M-%S}'.format(table.last_scan.scan.start_datetime)
+
+    @staticmethod
+    def avg_pot_(table):
+        return '{:.2f}'.format(table.avg_pot)
+
+    @staticmethod
+    def avg_mtr_(table):
+        return '{:.2f}'.format(table.avg_mtr)
 
 
 class TableScanAdmin(admin.ModelAdmin):

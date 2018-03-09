@@ -66,25 +66,51 @@ class Table(models.Model):
 
     @property
     def mtr(self):
-        return self.last_scan.entry_count / self.last_scan.unique_player_count
+        """ Multitable ratio"""
+        try:
+            mtr = self.last_scan.entry_count / self.last_scan.unique_player_count
+        except ZeroDivisionError:
+            mtr = 0
+        return mtr
+
+    @property
+    def scan_count(self):
+        """ Total number of scan """
+        return self.table_scans.count()
 
     @property
     def avg_pot(self):
-        return self.table_scans.aggregate(models.Avg('average_pot'))['average_pot__avg']
+        avg_pot = self.table_scans.aggregate(models.Avg('average_pot'))['average_pot__avg']
+        if avg_pot:
+            return avg_pot
+        else:
+            return 0
 
     @property
     def avg_entry_count(self):
-        return self.table_scans.aggregate(models.Avg('entry_count'))['entry_count__avg']
+        avg_entry_count = self.table_scans.aggregate(models.Avg('entry_count'))['entry_count__avg']
+        if avg_entry_count:
+            return avg_entry_count
+        else:
+            return 0
 
     @property
     def avg_unique_player_count(self):
-        return self.table_scans.aggregate(models.Avg('unique_player_count'))['unique_player_count__avg']
+        avg_unique_player_count = self.table_scans.aggregate(models.Avg('unique_player_count'))['unique_player_count__avg']
+        if avg_unique_player_count:
+            return avg_unique_player_count
+        else:
+            return 0
+
 
     @property
     def avg_mtr(self):
         e = self.table_scans.aggregate(models.Sum('entry_count'))['entry_count__sum']
         p = self.table_scans.aggregate(models.Sum('unique_player_count'))['unique_player_count__sum']
-        return e / p
+        if e and p:
+            return e / p
+        else:
+            return 0
 
 
 class Scanner(models.Model):
