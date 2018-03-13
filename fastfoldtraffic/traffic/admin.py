@@ -8,6 +8,7 @@ class TableAdmin(admin.ModelAdmin):
     list_display = ('__str__',
                     'scan_count',
                     'avg_pot_',
+                    'avg_players_per_flop_',
                     'avg_mtr_',
                     'last_scan_datetime')
 
@@ -18,6 +19,10 @@ class TableAdmin(admin.ModelAdmin):
     @staticmethod
     def avg_pot_(table):
         return '{:.2f}'.format(table.avg_pot)
+
+    @staticmethod
+    def avg_players_per_flop_(table):
+        return '{:.2f}'.format(table.avg_players_per_flop)
 
     @staticmethod
     def avg_mtr_(table):

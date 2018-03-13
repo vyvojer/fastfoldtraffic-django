@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.utils import timezone
 from django.test import TestCase, Client
 from django.urls import reverse
@@ -43,3 +45,26 @@ class IndexViewTest(TestCase):
         self.assertEqual(list(response.context['tables']),
                          [self.aquarium,
                           self.kino])
+
+
+class TableViewTest(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.albania = Country.objects.create(iso='AL', name='Albania')
+        cls.nigeria = Country.objects.create(iso='NI', name='Nigeria')
+        cls.pushkin = Player.objects.create(name='pushkin', country=cls.nigeria, room='PS')
+        cls.obama = Player.objects.create(name='obama', country=cls.nigeria, room='PS')
+        cls.lenin = Player.objects.create(name='lenin', country=cls.albania, room='PS')
+        cls.scanner = Scanner.objects.create(name='Scanner1')
+        now = timezone.now()
+        cls.time_now = now
+        cls.time_one_hour_before = now - timedelta(hours=1)
+        cls.time_two_hours_before = now - timedelta(hours=2)
+        cls.time_three_hours_before = now - timedelta(hours=3)
+        cls.time_two_days_before = now - timedelta(days=2)
+        cls.time_three_days_before = now - timedelta(days=3)
+
+
+
+
