@@ -17,7 +17,7 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         """ Return the tables, that have scans """
 
-        return Table.objects.filter()
+        return Table.objects.order_by('room', 'game', 'max_players', 'limit',)
 
 
 def table(request, room, table_name):
