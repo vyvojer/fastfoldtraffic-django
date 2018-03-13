@@ -94,9 +94,8 @@ class Table(models.Model):
 
     @property
     def avg_players_per_flop(self):
-        avg_players_per_flop = \
-            self.table_scans.filter(players_per_flop__gt=0).aggregate(models.Avg('players_per_flop'))[
-                'players_per_flop__avg']
+        avg_players_per_flop = self.table_scans.filter(
+            players_per_flop__gt=0).aggregate(models.Avg('players_per_flop'))['players_per_flop__avg']
         if avg_players_per_flop:
             return avg_players_per_flop
         else:
