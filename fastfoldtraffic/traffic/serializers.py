@@ -70,8 +70,8 @@ class ScanSerializer(serializers.Serializer):
                         if player.country.iso == 'UC' and iso:
                             player.country = country
                             player.save()
-
                     PlayerScan.objects.create(player=player, table_scan=table_scan, **player_data)
+                table_scan.save()  # save table_scan again to calculate one, two... four tablers
 
         logger.info("Scanner '%s' just uploaded info about %s tables", scanner_name, len(tables_data))
 
