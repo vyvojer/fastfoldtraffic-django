@@ -1,9 +1,10 @@
 from datetime import timedelta
+import re
 
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-
+import pygal
 # Create your models here.
 
 LAST_24 = 0
@@ -191,17 +192,63 @@ class Table(models.Model):
         else:
             return 0
 
-    def chart(self, field, chart_type):
+    def __getattr__(self, name: str):
+        if "_chart_" in name:
+            match = re.match(r'(.*)_chart_(.*)', name)
+            if match:
+                field = match.group(1)
+                chart_type = match.group(2)
+                if chart_type not in ('spark', 'LAST_24', 'BY_HOUR', 'BY_WEEKDAY'):
+                    raise AttributeError('Bad chart_type "{}" in attribute "{}"'.format(chart_type, name))
+                else:
+                    if chart_type == 'spark':
+                        data = self._chart(field, LAST_24)
+                        return self._render_spark_chart(data)
+                    else:
+                        return self._chart(field, eval('{}'.format(chart_type)))
+            else:
+                raise AttributeError("name")
+        else:
+            return super().__getattribute__(name)
+
+    @staticmethod
+    def _render_spark_chart(data: dict, title=None):
+        spark_options = dict(
+            fill=True,
+            width=100,
+            height=20,
+            show_dots=False,
+            show_legend=False,
+            show_x_labels=False,
+            show_y_labels=False,
+            spacing=0,
+            margin=0,
+            min_scale=1,
+            max_scale=2,
+            explicit_size=True,
+            no_data_text='',
+            js=(),
+        )
+        chart = pygal.Line(**spark_options)
+        values = data['values']
+        chart.add(title, values)
+        return chart.render(is_unicode=True)
+
+    def _chart(self, field, chart_type):
         chart = {}
         if chart_type == LAST_24:
             if not hasattr(self, '_last_24'):
                 self._last_24 = self.table_scans.filter(
                     datetime__gte=timezone.now() - timedelta(hours=24)).values()
             query_set = self._last_24
-        if chart_type == BY_HOUR:
+        elif chart_type == BY_HOUR:
             if not hasattr(self, '_by_hour'):
                 self._by_hour = self.table_scans.by_hour().all()
             query_set = self._by_hour
+        else:
+            if not hasattr(self, '_by_weekday'):
+                self._by_weekday = self.table_scans.by_weekday().all()
+            query_set = self._by_weekday
 
         if field == 'mtr':
             chart_tuples = [(table_scan['datetime'], table_scan['entry_count'] / table_scan['unique_player_count'])
