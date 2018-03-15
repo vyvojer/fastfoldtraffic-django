@@ -182,6 +182,10 @@ class TableTest(TestCase):
         self.assertEqual(self.gotha.last_scan.two_tabler_count, 0)
         self.assertEqual(self.gotha.last_scan.three_tabler_count, 0)
         self.assertEqual(self.gotha.last_scan.four_tabler_count, 1)
+        self.assertAlmostEqual(self.gotha.one_tabler_percent, 66.6, delta=0.1)
+        self.assertAlmostEqual(self.gotha.two_tabler_percent, 0, delta=0.1)
+        self.assertAlmostEqual(self.gotha.three_tabler_percent, 0, delta=0.1)
+        self.assertAlmostEqual(self.gotha.four_tabler_percent, 33.3, delta=0.1)
 
         self.assertEqual(self.gotha.mtr, 2)
 

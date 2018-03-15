@@ -24,8 +24,8 @@
                         {% for table in tables %}
                             {% if table.last_scan.entry_count > 0 %}
                                 <tr>
-                                    <td>{{ table.limit_str }}</td>
-                                    <td>{{ table.name }}</td>
+                                    <td><a href="{% url 'traffic:table' table.name|slugify %}" >{{ table.limit_str }}</a></td>
+                                    <td><a href="{% url 'traffic:table' table.name|slugify %}" >{{ table.name }}</a></td>
                                     <td>{{ table.last_scan.entry_count }}</td>
                                     <td>{{ table.last_scan.unique_player_count }}</td>
                                     <td>{{ table.last_scan.average_pot }}</td>

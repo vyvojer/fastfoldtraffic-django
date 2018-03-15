@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ table.limit_str }} {{ table.name }}{% endblock %}
+{% block body %}
+    <h4>{{ table.limit_str }} {{ table.name }}</h4>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Current</th>
+                    <th>Average</th>
+                    <th>Last 24 hours</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Players</td>
+                    <td>{{ table.last_scan.unique_player_count }}</td>
+                    <td>{{ table.avg_unique_player_count|floatformat:"-1" }}</td>
+                    <td>{{ unique_player_count_chart|safe }}</td>
+                </tr>
+                <tr>
+                    <td>Entries</td>
+                    <td>{{ table.last_scan.entry_count }}</td>
+                    <td>{{ table.avg_entry_count|floatformat:"-1" }}</td>
+                    <td>{{ entry_count_chart|safe }}</td>
+                </tr>
+                <tr>
+                    <td>MTR</td>
+                    <td>{{ table.mtr|floatformat:"-1"  }}</td>
+                    <td>{{ table.avg_mtr|floatformat:"-1" }}</td>
+                    <td>{{ mtr_chart|safe }}</td>
+                </tr>
+                <tr>
+                    <td>Per flop</td>
+                    <td>{{ table.last_scan.players_per_flop }}</td>
+                    <td>{{ table.avg_players_per_flop|floatformat:"-1" }}</td>
+                    <td>{{ players_per_flop_chart|safe }}</td>
+                </tr>
+                <tr>
+                    <td>Pot</td>
+                    <td>{{ table.last_scan.average_pot }}</td>
+                    <td>{{ table.avg_pot|floatformat:"-1" }}</td>
+                    <td>{{ average_pot_chart|safe }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+{% endblock %}

@@ -137,6 +137,34 @@ class Table(models.Model):
             return 0
 
     @property
+    def one_tabler_percent(self):
+        if self.last_scan.unique_player_count:
+            return self.last_scan.one_tabler_count / self.last_scan.unique_player_count * 100
+        else:
+            return 0
+
+    @property
+    def two_tabler_percent(self):
+        if self.last_scan.unique_player_count:
+            return self.last_scan.two_tabler_count / self.last_scan.unique_player_count * 100
+        else:
+            return 0
+
+    @property
+    def three_tabler_percent(self):
+        if self.last_scan.unique_player_count:
+            return self.last_scan.three_tabler_count / self.last_scan.unique_player_count * 100
+        else:
+            return 0
+
+    @property
+    def four_tabler_percent(self):
+        if self.last_scan.unique_player_count:
+            return self.last_scan.four_tabler_count / self.last_scan.unique_player_count * 100
+        else:
+            return 0
+
+    @property
     def avg_two_tabler_count(self):
         avg_two_tabler_count = self.table_scans.aggregate(models.Avg('two_tabler_count'))[
             'two_tabler_count__avg']

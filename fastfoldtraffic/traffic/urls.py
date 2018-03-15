@@ -1,11 +1,11 @@
-from django.conf.urls import url, include
+from django.urls import re_path, path
 
 from . import views
 
 app_name = 'traffic'
 
 urlpatterns = [
-    url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^(?P<room>ps|pp)/(?P<table_name>\w+)/$', views.table, name='table'),
-    url(r'^api/v1/scans/$', views.update_scans, name='update_scans'),
+    re_path(r'^$', views.IndexView.as_view(), name='index'),
+    path('ps/<slug:table_name>/', views.TableView.as_view(), name='table'),
+    re_path(r'^api/v1/scans/$', views.update_scans, name='update_scans'),
 ]
