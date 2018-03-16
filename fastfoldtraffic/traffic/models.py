@@ -137,33 +137,49 @@ class Table(models.Model):
         else:
             return 0
 
-    @property
-    def one_tabler_percent(self):
+    def _tabler_percent(self, tabler_count):
         if self.last_scan.unique_player_count:
-            return self.last_scan.one_tabler_count / self.last_scan.unique_player_count * 100
+            return tabler_count / self.last_scan.unique_player_count * 100
         else:
             return 0
+
+    @property
+    def one_tabler_percent(self):
+        return self._tabler_percent(self.last_scan.one_tabler_count)
 
     @property
     def two_tabler_percent(self):
-        if self.last_scan.unique_player_count:
-            return self.last_scan.two_tabler_count / self.last_scan.unique_player_count * 100
-        else:
-            return 0
+        return self._tabler_percent(self.last_scan.two_tabler_count)
 
     @property
     def three_tabler_percent(self):
-        if self.last_scan.unique_player_count:
-            return self.last_scan.three_tabler_count / self.last_scan.unique_player_count * 100
+        return self._tabler_percent(self.last_scan.three_tabler_count)
+
+    @property
+    def four_tabler_percent(self):
+        return self._tabler_percent(self.last_scan.four_tabler_count)
+
+    def _avg_tabler_percent(self, avg_tabler):
+        if self.avg_unique_player_count:
+            return avg_tabler / self.avg_unique_player_count * 100
         else:
             return 0
 
     @property
-    def four_tabler_percent(self):
-        if self.last_scan.unique_player_count:
-            return self.last_scan.four_tabler_count / self.last_scan.unique_player_count * 100
-        else:
-            return 0
+    def avg_one_tabler_percent(self):
+        return self._avg_tabler_percent(self.avg_one_tabler_count)
+
+    @property
+    def avg_two_tabler_percent(self):
+        return self._avg_tabler_percent(self.avg_two_tabler_count)
+
+    @property
+    def avg_three_tabler_percent(self):
+        return self._avg_tabler_percent(self.avg_three_tabler_count)
+
+    @property
+    def avg_four_tabler_percent(self):
+        return self._avg_tabler_percent(self.avg_four_tabler_count)
 
     @property
     def avg_two_tabler_count(self):
@@ -250,9 +266,18 @@ class Table(models.Model):
                 self._by_weekday = self.table_scans.by_weekday().all()
             query_set = self._by_weekday
 
+        # Chart tuple consist of datetime and value
         if field == 'mtr':
             chart_tuples = [(table_scan['datetime'], table_scan['entry_count'] / table_scan['unique_player_count'])
                             for table_scan in query_set]
+        elif '_percent' in field:
+            count_field = field.replace('percent', 'count')
+            if 'avg' in field:
+                total_field = 'avg_unique_player_count'
+            else:
+                total_field = 'unique_player_count'
+            chart_tuples = [(table_scan['datetime'],
+                             table_scan[count_field]/table_scan[total_field] * 100) for table_scan in query_set]
         else:
             chart_tuples = [(table_scan['datetime'], table_scan[field]) for table_scan in query_set]
 

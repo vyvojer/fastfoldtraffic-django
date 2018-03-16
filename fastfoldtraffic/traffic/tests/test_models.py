@@ -198,6 +198,10 @@ class TableTest(TestCase):
         self.assertEqual(self.gotha.avg_two_tabler_count, 0)
         self.assertEqual(self.gotha.avg_three_tabler_count, 0)
         self.assertEqual(self.gotha.avg_four_tabler_count, 1)
+        self.assertAlmostEqual(self.gotha.avg_one_tabler_percent, 66.6, delta=0.1)
+        self.assertAlmostEqual(self.gotha.avg_two_tabler_percent, 0, delta=0.1)
+        self.assertAlmostEqual(self.gotha.avg_three_tabler_percent, 0, delta=0.1)
+        self.assertAlmostEqual(self.gotha.avg_four_tabler_percent, 33.3, delta=0.1)
 
         self.scan_two_days_before()
 
@@ -252,6 +256,10 @@ class TableTest(TestCase):
         self.assertEqual(self.gotha.last_scan.datetime, self.now)
         self.assertEqual(self.gotha.last_scan.player_count, 13)
         self.assertEqual(self.gotha.last_scan.average_pot, 29)
+        self.assertAlmostEqual(self.gotha.one_tabler_percent, 40, delta=0.1)
+        self.assertAlmostEqual(self.gotha.two_tabler_percent, 0, delta=0.1)
+        self.assertAlmostEqual(self.gotha.three_tabler_percent, 20, delta=0.1)
+        self.assertAlmostEqual(self.gotha.four_tabler_percent, 40, delta=0.1)
 
         self.assertAlmostEqual(self.gotha.avg_pot, 27.5, delta=0.01)
         self.assertAlmostEqual(self.gotha.avg_players_per_flop, 25.5, delta=0.01)
@@ -264,26 +272,81 @@ class TableTest(TestCase):
         self.assertAlmostEqual(self.gotha.avg_three_tabler_count, 0.5, delta=0.01)
         self.assertAlmostEqual(self.gotha.avg_four_tabler_count, 1.5, delta=0.01)
 
-        self.assertEqual(self.gotha.chart('average_pot', LAST_24)['values'],
+        self.assertAlmostEqual(self.gotha.avg_one_tabler_percent, 33.3, delta=0.1)
+        self.assertAlmostEqual(self.gotha.avg_two_tabler_percent, 9.5, delta=0.1)
+        self.assertAlmostEqual(self.gotha.avg_three_tabler_percent, 14.3, delta=0.1)
+        self.assertAlmostEqual(self.gotha.avg_four_tabler_percent, 42.9, delta=0.1)
+
+        self.assertEqual(self.gotha._chart('average_pot', LAST_24)['values'],
                          [30, 35, 26, 29])
-        self.assertEqual(self.gotha.chart('players_per_flop', LAST_24)['values'],
+        self.assertEqual(self.gotha._chart('players_per_flop', LAST_24)['values'],
                          [25, 28, 24, 26])
-        self.assertEqual(self.gotha.chart('one_tabler_count', LAST_24)['values'],
+        self.assertEqual(self.gotha._chart('one_tabler_count', LAST_24)['values'],
                          [1, 1, 0, 2])
 
 
-        chart_values = self.gotha.chart('average_pot', BY_HOUR)['values']
-        chart_times = self.gotha.chart('average_pot', BY_HOUR)['dates']
+        chart_values = self.gotha._chart('average_pot', BY_HOUR)['values']
+        chart_times = self.gotha._chart('average_pot', BY_HOUR)['dates']
         self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 24.66, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 26, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 35, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 30, delta=0.1)
 
-        chart_values = self.gotha.chart('one_tabler_count', BY_HOUR)['values']
-        chart_times = self.gotha.chart('one_tabler_count', BY_HOUR)['dates']
+        chart_values = self.gotha._chart('one_tabler_count', BY_HOUR)['values']
+        chart_times = self.gotha._chart('one_tabler_count', BY_HOUR)['dates']
         self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 1.66, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 1, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 1, delta=0.1)
 
+        chart_values = self.gotha._chart('one_tabler_percent', BY_HOUR)['values']
+        chart_times = self.gotha._chart('one_tabler_percent', BY_HOUR)['dates']
+        self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 50, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 0, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 25, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 25, delta=0.1)
 
+        chart_values = self.gotha._chart('two_tabler_percent', BY_HOUR)['values']
+        chart_times = self.gotha._chart('two_tabler_percent', BY_HOUR)['dates']
+        self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 50, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 0, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 25, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 25, delta=0.1)
+
+        chart_values = self.gotha._chart('three_tabler_percent', BY_HOUR)['values']
+        chart_times = self.gotha._chart('three_tabler_percent', BY_HOUR)['dates']
+        self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 50, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 0, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 25, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 25, delta=0.1)
+
+        chart_values = self.gotha._chart('four_tabler_percent', BY_HOUR)['values']
+        chart_times = self.gotha._chart('four_tabler_percent', BY_HOUR)['dates']
+        self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 50, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 0, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 25, delta=0.1)
+        self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 25, delta=0.1)
+
+        chart_values = self.gotha._chart('one_tabler_percent', LAST_24)['values']
+        self.assertAlmostEqual(chart_values[0], 25, delta=0.1)
+        self.assertAlmostEqual(chart_values[1], 25, delta=0.1)
+        self.assertAlmostEqual(chart_values[2], 0, delta=0.1)
+        self.assertAlmostEqual(chart_values[3], 40, delta=0.1)
+
+        chart_values = self.gotha._chart('two_tabler_percent', LAST_24)['values']
+        self.assertAlmostEqual(chart_values[0], 0, delta=0.1)
+        self.assertAlmostEqual(chart_values[1], 25, delta=0.1)
+        self.assertAlmostEqual(chart_values[2], 33.3, delta=0.1)
+        self.assertAlmostEqual(chart_values[3], 0, delta=0.1)
+
+        chart_values = self.gotha._chart('three_tabler_percent', LAST_24)['values']
+        self.assertAlmostEqual(chart_values[0], 25, delta=0.1)
+        self.assertAlmostEqual(chart_values[1], 0, delta=0.1)
+        self.assertAlmostEqual(chart_values[2], 0, delta=0.1)
+        self.assertAlmostEqual(chart_values[3], 20, delta=0.1)
+
+        chart_values = self.gotha._chart('four_tabler_percent', LAST_24)['values']
+        self.assertAlmostEqual(chart_values[0], 50, delta=0.1)
+        self.assertAlmostEqual(chart_values[1], 50, delta=0.1)
+        self.assertAlmostEqual(chart_values[2], 66.6, delta=0.1)
+        self.assertAlmostEqual(chart_values[3], 40, delta=0.1)
