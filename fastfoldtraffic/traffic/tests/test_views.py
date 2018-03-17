@@ -164,7 +164,7 @@ class TableViewTest(TestCase):
 
     def test_view(self):
         self.scan_tree_days_before()
-        response = client.get(reverse('traffic:table', args=['gotha',]))
+        response = client.get(reverse('traffic:table_current', args=['gotha',]))
         self.assertEqual(response.status_code, 200)
         context = response.context
         self.assertEqual(context['table'].name, 'Gotha')

@@ -1,7 +1,6 @@
 from datetime import timedelta
 import re
 
-from django.utils import timezone
 import pygal
 
 from .models import *
@@ -15,6 +14,9 @@ class Charts:
 
     def __init__(self, table: Table) -> None:
         self.table = table
+        self._last_24 = None
+        self._by_hour = None
+        self._by_weekday = None
 
     def __getattr__(self, name: str):
         if "_chart_" in name:
@@ -74,21 +76,33 @@ class Charts:
         chart.add(title, data)
         return chart.render(is_unicode=True)
 
+    @property
+    def last_24(self):
+        if self._last_24 is None:
+            self._last_24 = self.table.table_scans.filter(
+                    datetime__gte=timezone.now() - timedelta(hours=24)).values()
+        return self._last_24
+
+    @property
+    def by_hour(self):
+        if self._by_hour is None:
+            self._by_hour = self.table.table_scans.by_hour().all()
+        return self._by_hour
+
+    @property
+    def by_weekday(self):
+        if self._by_weekday is None:
+            self._by_weekday = self.table.table_scans.by_weekday().all()
+        return self._by_weekday
+
     def _chart(self, field, chart_type):
         chart = {}
         if chart_type == LAST_24:
-            if not hasattr(self, '_last_24'):
-                self._last_24 = self.table.table_scans.filter(
-                    datetime__gte=timezone.now() - timedelta(hours=24)).values()
-            query_set = self._last_24
+            query_set = self.last_24
         elif chart_type == BY_HOUR:
-            if not hasattr(self, '_by_hour'):
-                self._by_hour = self.table.table_scans.by_hour().all()
-            query_set = self._by_hour
+            query_set = self.by_hour
         else:
-            if not hasattr(self, '_by_weekday'):
-                self._by_weekday = self.table.table_scans.by_weekday().all()
-            query_set = self._by_weekday
+            query_set = self.by_weekday
 
         # Chart tuple consist of datetime and value
         if field == 'mtr':
