@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ table.limit_str }} {{ table.name }}{% endblock %}
+{% block body %}
+    <h4>{{ table.limit_str }} {{ table.name }}</h4>
+
+    <div class="row">
+        <div class="col-sm-12">
+            {{ charts.unique_player_count_chart_last_24|safe }}
+        </div>
+    </div>
+{% endblock %}

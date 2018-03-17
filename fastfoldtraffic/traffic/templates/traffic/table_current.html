@@ -20,31 +20,31 @@
                     <td>Players</td>
                     <td>{{ table.last_scan.unique_player_count }}</td>
                     <td>{{ table.avg_unique_player_count|floatformat:"-1" }}</td>
-                    <td>{{ table.unique_player_count_chart_spark|safe }}</td>
+                    <td>{{ charts.unique_player_count_chart_spark|safe }}</td>
                 </tr>
                 <tr>
                     <td>Entries</td>
                     <td>{{ table.last_scan.entry_count }}</td>
                     <td>{{ table.avg_entry_count|floatformat:"-1" }}</td>
-                    <td>{{ table.entry_count_chart_spark|safe }}</td>
+                    <td>{{ charts.entry_count_chart_spark|safe }}</td>
                 </tr>
                 <tr>
                     <td>MTR</td>
                     <td>{{ table.mtr|floatformat:"-1"  }}</td>
                     <td>{{ table.avg_mtr|floatformat:"-1" }}</td>
-                    <td>{{ table.mtr_chart_spark|safe }}</td>
+                    <td>{{ charts.mtr_chart_spark|safe }}</td>
                 </tr>
                 <tr>
                     <td>Per flop</td>
                     <td>{{ table.last_scan.players_per_flop }}</td>
                     <td>{{ table.avg_players_per_flop|floatformat:"-1" }}</td>
-                    <td>{{ table.players_per_flop_chart_spark|safe }}</td>
+                    <td>{{ charts.players_per_flop_chart_spark|safe }}</td>
                 </tr>
                 <tr>
                     <td>Pot</td>
                     <td>{{ table.last_scan.average_pot }}</td>
                     <td>{{ table.avg_pot|floatformat:"-1" }}</td>
-                    <td>{{ table.average_pot_chart_spark|safe }}</td>
+                    <td>{{ charts.average_pot_chart_spark|safe }}</td>
                 </tr>
                 </tbody>
             </table>

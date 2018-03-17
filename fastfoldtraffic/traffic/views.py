@@ -6,9 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-import pygal
-
-from .models import Table, LAST_24
+from .models import Table
+from .charts import Charts
 from .serializers import ScanSerializer
 
 
@@ -25,15 +24,35 @@ class IndexView(ListView):
         return Table.objects.order_by('room', 'game', 'max_players', 'limit', )
 
 
+
 class TableView(DetailView):
     model = Table
     context_object_name = 'table'
-    template_name = 'traffic/table_general.html'
 
     def get_object(self, queryset=None):
         room = 'ps'
         name = self.kwargs['table_name'].replace('-', ' ')
         return get_object_or_404(Table, room__iexact=room, name__iexact=name)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        table = context['table']
+        context['charts'] = Charts(table)
+        return context
+
+
+class TableCurrentView(TableView):
+    template_name = 'traffic/table_current.html'
+
+
+class TableLast24View(TableView):
+    template_name = 'traffic/table_last_24.html'
+
+class TableByHourView(TableView):
+    template_name = 'traffic/table_last_24.html'
+
+class TableByWeekdayView(TableView):
+    template_name = 'traffic/table_last_24.html'
 
 
 @api_view(['PUT'])
