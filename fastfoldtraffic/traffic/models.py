@@ -232,6 +232,7 @@ class TableScanQueryset(models.QuerySet):
             average_pot=models.Avg('average_pot'),
             players_per_flop=models.Avg('players_per_flop'),
             unique_player_count=models.Avg('unique_player_count'),
+            entry_count=models.Avg('entry_count'),
             one_tabler_count=models.Avg('one_tabler_count'),
             two_tabler_count=models.Avg('two_tabler_count'),
             three_tabler_count=models.Avg('three_tabler_count'),
