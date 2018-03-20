@@ -2,20 +2,19 @@
 {% load static %}
 {% block title %}{{ table.limit_str }} {{ table.name }}{% endblock %}
 {% block body %}
-    <h4>{{ table.limit_str }} {{ table.name }}. Last 24 hours (UTC)</h4>
-
+    <h4>{{ table.limit_str }} {{ table.name }}. By Weekday (UTC)</h4>
     <div class="row">
         <div class="col-sm-12">
-            {{ charts.player_count_chart_last_24|safe }}
+            {{ charts.player_count_chart_by_weekday|safe }}
         </div>
         <div class="col-sm-12">
-            {{ charts.mtr_chart_last_24|safe }}
+            {{ charts.mtr_chart_by_weekday|safe }}
         </div>
         <div class="col-sm-12">
-            {{ charts.players_per_flop_chart_last_24|safe }}
+            {{ charts.players_per_flop_chart_by_weekday|safe }}
         </div>
         <div class="col-sm-12">
-            {{ charts.average_pot_chart_last_24|safe }}
+            {{ charts.average_pot_chart_by_weekday|safe }}
         </div>
     </div>
 {% endblock %}

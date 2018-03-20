@@ -44,15 +44,14 @@ class TableView(DetailView):
 class TableCurrentView(TableView):
     template_name = 'traffic/table_current.html'
 
-
 class TableLast24View(TableView):
     template_name = 'traffic/table_last_24.html'
 
 class TableByHourView(TableView):
-    template_name = 'traffic/table_last_24.html'
+    template_name = 'traffic/table_by_hour.html'
 
 class TableByWeekdayView(TableView):
-    template_name = 'traffic/table_last_24.html'
+    template_name = 'traffic/table_by_weekday.html'
 
 
 @api_view(['PUT'])

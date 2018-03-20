@@ -85,7 +85,7 @@ class Charts:
                     elif chart_type == 'by_hour':
                         return self._render_by_hour_chart(chart, fields, datas)
                     else:
-                        return self._render_by_hour_chart(chart, fields, datas)
+                        return self._render_by_weekday_chart(chart, fields, datas)
             else:
                 raise AttributeError("name")
         else:
@@ -160,6 +160,15 @@ class Charts:
     def _render_by_hour_chart(chart: _Chart, fields: list, datas: list):
         options = dict(
             title=chart.title,
+            x_labels = datas[0]['dates']
+        )
+        return Charts._render_bar_chart(options, chart, fields, datas)
+
+    @staticmethod
+    def _render_by_weekday_chart(chart: _Chart, fields: list, datas: list):
+        options = dict(
+            title=chart.title,
+            x_labels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
         )
         return Charts._render_bar_chart(options, chart, fields, datas)
 

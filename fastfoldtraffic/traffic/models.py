@@ -225,7 +225,7 @@ class TableScanQueryset(models.QuerySet):
         return self._extra("EXTRACT(HOUR FROM datetime)", 'datetime')
 
     def by_weekday(self):
-        return self._extra("EXTRACT(HOUR FROM datetime)", 'datetime')
+        return self._extra("EXTRACT(DOW FROM datetime)", 'datetime')
 
     def _extra(self, extra_clause, extra_name='datetime'):
         query_set = self.extra({extra_name: extra_clause}).values(extra_name).annotate(
