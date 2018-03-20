@@ -35,13 +35,37 @@
                     <td>{{ charts.mtr_chart_spark|safe }}</td>
                 </tr>
                 <tr>
+                    <td>One-tablers (%)</td>
+                    <td>{{ table.one_tabler_percent|floatformat:"-1"  }}</td>
+                    <td>{{ table.avg_one_tabler_percent|floatformat:"-1" }}</td>
+                    <td>{{ charts.one_tabler_percent_chart_spark|safe }}</td>
+                </tr>
+                <tr>
+                    <td>Two-tablers (%)</td>
+                    <td>{{ table.two_tabler_percent|floatformat:"-1"  }}</td>
+                    <td>{{ table.avg_two_tabler_percent|floatformat:"-1" }}</td>
+                    <td>{{ charts.two_tabler_percent_chart_spark|safe }}</td>
+                </tr>
+                <tr>
+                    <td>Three-tablers (%)</td>
+                    <td>{{ table.three_tabler_percent|floatformat:"-1"  }}</td>
+                    <td>{{ table.avg_three_tabler_percent|floatformat:"-1" }}</td>
+                    <td>{{ charts.three_tabler_percent_chart_spark|safe }}</td>
+                </tr>
+                <tr>
+                    <td>Four-tablers (%)</td>
+                    <td>{{ table.four_tabler_percent|floatformat:"-1"  }}</td>
+                    <td>{{ table.avg_four_tabler_percent|floatformat:"-1" }}</td>
+                    <td>{{ charts.four_tabler_percent_chart_spark|safe }}</td>
+                </tr>
+                <tr>
                     <td>Per flop</td>
                     <td>{{ table.last_scan.players_per_flop }}</td>
                     <td>{{ table.avg_players_per_flop|floatformat:"-1" }}</td>
                     <td>{{ charts.players_per_flop_chart_spark|safe }}</td>
                 </tr>
                 <tr>
-                    <td>Pot</td>
+                    <td>Pot ($)</td>
                     <td>{{ table.last_scan.average_pot }}</td>
                     <td>{{ table.avg_pot|floatformat:"-1" }}</td>
                     <td>{{ charts.average_pot_chart_spark|safe }}</td>
