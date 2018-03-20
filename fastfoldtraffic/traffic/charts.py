@@ -82,14 +82,7 @@ class Charts:
                 else:
                     chart = _CHARTS[chart_key]
                     fields, datas = self._get_data_for_chart(chart, chart_type)
-                    if chart_type == 'spark':
-                        return self._render_spark_chart(chart, fields, datas)
-                    elif chart_type == 'last_24':
-                        return self._render_line_chart(chart, fields, datas)
-                    elif chart_type == 'by_hour':
-                        return self._render_by_hour_chart(chart, fields, datas)
-                    else:
-                        return self._render_by_weekday_chart(chart, fields, datas)
+                    return self._render_chart(chart, chart_type, fields, datas)
             else:
                 raise AttributeError("name")
         else:
@@ -100,81 +93,67 @@ class Charts:
         datas = []
         for field in chart.fields:
             if chart_type in ['spark', 'last_24']:
-                _, data = self._chart(field.db_field, LAST_24)
+                chart_data = self._get_chart_data(field.db_field, LAST_24)
             elif chart_type == 'by_hour':
-                data, _ = self._chart(field.db_field, BY_HOUR)
+                chart_data = self._get_chart_data(field.db_field, BY_HOUR)
             else:
-                data, _ = self._chart(field.db_field, BY_WEEKDAY)
+                chart_data = self._get_chart_data(field.db_field, BY_WEEKDAY)
             fields.append(field)
-            datas.append(data)
+            datas.append(chart_data)
         return fields, datas
 
     @staticmethod
-    def _render_date_time_chart(options: dict, chart: _Chart, fields: list, datas: list):
-        chart = pygal.DateTimeLine(**options)
+    def _render_chart(chart: _Chart, chart_type: str, fields: list, datas: list):
+        options = {}
+
+        if chart.title == "Multi-tablers":
+            pyg_chart = pygal.StackedLine()
+        elif chart_type in ['spark', 'last_24']:
+            pyg_chart = pygal.DateTimeLine()
+        else:
+            pyg_chart = pygal.Bar()
+
+        if chart_type == 'spark':
+            pyg_chart.fill = True
+            pyg_chart.width = 100
+            pyg_chart.height = 20
+            pyg_chart.show_dots = False
+            pyg_chart.show_legend = False
+            pyg_chart.show_x_labels = False
+            pyg_chart.show_y_labels = False
+            pyg_chart.spacing = 0
+            pyg_chart.margin = 0
+            pyg_chart.min_scale = 1
+            pyg_chart.max_scale = 2
+            pyg_chart.explicit_size = True
+            pyg_chart.no_data_text = ''
+            pyg_chart.js = ()
+        elif chart_type == 'last_24':
+            pyg_chart.title = chart.title
+            pyg_chart.fill = True
+            pyg_chart.show_dots = False
+            pyg_chart.legend_at_bottom = True
+            pyg_chart.show_x_guides = True
+            pyg_chart.spacing = 20
+            pyg_chart.margin = 20
+            pyg_chart.x_label_rotation = 45
+            pyg_chart.x_labels_major_count = 15
+            pyg_chart.x_value_formatter = lambda dt: dt.strftime('%H:%M')
+            pyg_chart.show_minor_x_labels = False
+        elif chart_type == 'by_hour':
+            pyg_chart.title = chart.title
+            pyg_chart.x_labels = [value[0] for value in datas[0]]
+        else:
+            pyg_chart.title = chart.title
+            pyg_chart.x_labels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+
         for field, data in zip(fields, datas):
-            chart.add(field.label, data)
-        return chart.render(is_unicode=True)
+            if chart_type in ['spark', 'last_24']:
+                pyg_chart.add(field.label, data)
+            else:
+                pyg_chart.add(field.label, [value[1] for value in data])
 
-    @staticmethod
-    def _render_bar_chart(options: dict, chart: _Chart, fields: list, datas: list):
-        chart = pygal.Bar(**options)
-        for field, data in zip(fields, datas):
-            chart.add(field.label, data['values'])
-        return chart.render(is_unicode=True)
-
-    @staticmethod
-    def _render_spark_chart(chart: _Chart, fields: list, datas: list):
-        options = dict(
-            fill=True,
-            width=100,
-            height=20,
-            show_dots=False,
-            show_legend=False,
-            show_x_labels=False,
-            show_y_labels=False,
-            spacing=0,
-            margin=0,
-            min_scale=1,
-            max_scale=2,
-            explicit_size=True,
-            no_data_text='',
-            js=(),
-        )
-        return Charts._render_date_time_chart(options, chart, fields, datas)
-
-    @staticmethod
-    def _render_line_chart(chart: _Chart, fields: list, datas: list):
-        options = dict(
-            title=chart.title,
-            fill=True,
-            show_dots=False,
-            legend_at_bottom=True,
-            show_x_guides=True,
-            spacing=20,
-            margin=20,
-            x_label_rotation=45,
-            x_labels_major_count=15,
-            x_value_formatter=lambda dt: dt.strftime('%H:%M'),
-            show_minor_x_labels=False
-        )
-        return Charts._render_date_time_chart(options, chart, fields, datas)
-
-    @staticmethod
-    def _render_by_hour_chart(chart: _Chart, fields: list, datas: list):
-        options = dict(
-            title=chart.title,
-            x_labels = datas[0]['dates']
-        )
-        return Charts._render_bar_chart(options, chart, fields, datas)
-
-    @staticmethod
-    def _render_by_weekday_chart(chart: _Chart, fields: list, datas: list):
-        options = dict(
-            title=chart.title,
-            x_labels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
-        )
-        return Charts._render_bar_chart(options, chart, fields, datas)
+        return pyg_chart.render(is_unicode=True)
 
     @property
     def last_24(self):
@@ -195,7 +174,8 @@ class Charts:
             self._by_weekday = self.table.table_scans.by_weekday().all()
         return self._by_weekday
 
-    def _chart(self, field, chart_type):
+    def _get_chart_data(self, field, chart_type):
+        """ Return list of tuples (datatime, value)"""
         chart = {}
         if chart_type == LAST_24:
             query_set = self.last_24
@@ -206,23 +186,21 @@ class Charts:
 
         # Chart tuple consist of datetime and value
         if field == 'mtr':
-            chart_tuples = [(table_scan['datetime'],
-                             table_scan['entry_count'] / table_scan['unique_player_count'] if table_scan[
-                                 'unique_player_count'] else 0)
-                            for table_scan in query_set]
+            chart_data = [(table_scan['datetime'],
+                           table_scan['entry_count'] / table_scan['unique_player_count'] if table_scan[
+                               'unique_player_count'] else 0)
+                          for table_scan in query_set]
         elif '_percent' in field:
             count_field = field.replace('percent', 'count')
             if 'avg' in field:
                 total_field = 'avg_unique_player_count'
             else:
                 total_field = 'unique_player_count'
-            chart_tuples = [(table_scan['datetime'],
-                             table_scan[count_field] / table_scan[total_field] * 100 if table_scan[total_field] else 0)
-                            for table_scan in query_set]
+            chart_data = [(table_scan['datetime'],
+                           table_scan[count_field] / table_scan[total_field] * 100 if table_scan[total_field] else 0)
+                          for table_scan in query_set]
         else:
-            chart_tuples = [(table_scan['datetime'], table_scan[field]) for table_scan in query_set]
+            chart_data = [(table_scan['datetime'], table_scan[field]) for table_scan in query_set]
 
-        chart_tuples.sort(key=lambda x: x[0])
-        chart['values'] = [table_scan[1] for table_scan in chart_tuples]
-        chart['dates'] = [table_scan[0] for table_scan in chart_tuples]
-        return chart, chart_tuples
+        chart_data.sort(key=lambda x: x[0])
+        return chart_data

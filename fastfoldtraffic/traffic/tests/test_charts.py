@@ -128,67 +128,67 @@ class ChartTest(TestCase):
         self.scan_now()
 
         charts = Charts(self.gotha)
-        chart_values= charts._chart('average_pot', BY_HOUR)[0]['values']
-        chart_times = charts._chart('average_pot', BY_HOUR)[0]['dates']
+        chart_values = [value[1] for value in charts._get_chart_data('average_pot', BY_HOUR)]
+        chart_times = [value[0] for value in charts._get_chart_data('average_pot', BY_HOUR)]
         self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 24.66, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 26, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 35, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 30, delta=0.1)
 
-        chart_values = charts._chart('one_tabler_count', BY_HOUR)[0]['values']
-        chart_times = charts._chart('one_tabler_count', BY_HOUR)[0]['dates']
+        chart_values = [value[1] for value in charts._get_chart_data('one_tabler_count', BY_HOUR)]
+        chart_times = [value[0] for value in charts._get_chart_data('one_tabler_count', BY_HOUR)]
         self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 1.66, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 1, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 1, delta=0.1)
 
-        chart_values = charts._chart('one_tabler_percent', BY_HOUR)[0]['values']
-        chart_times = charts._chart('one_tabler_percent', BY_HOUR)[0]['dates']
+        chart_values = [value[1] for value in charts._get_chart_data('one_tabler_percent', BY_HOUR)]
+        chart_times = [value[0] for value in charts._get_chart_data('one_tabler_percent', BY_HOUR)]
         self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 50, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 25, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 25, delta=0.1)
 
-        chart_values = charts._chart('two_tabler_percent', BY_HOUR)[0]['values']
-        chart_times = charts._chart('two_tabler_percent', BY_HOUR)[0]['dates']
+        chart_values = [value[1] for value in charts._get_chart_data('two_tabler_percent', BY_HOUR)]
+        chart_times = [value[0] for value in charts._get_chart_data('two_tabler_percent', BY_HOUR)]
         self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 33.3, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 25, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 0, delta=0.1)
 
-        chart_values = charts._chart('three_tabler_percent', BY_HOUR)[0]['values']
-        chart_times = charts._chart('three_tabler_percent', BY_HOUR)[0]['dates']
+        chart_values = [value[1] for value in charts._get_chart_data('three_tabler_percent', BY_HOUR)]
+        chart_times = [value[0] for value in charts._get_chart_data('three_tabler_percent', BY_HOUR)]
         self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 20, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 25, delta=0.1)
 
-        chart_values = charts._chart('four_tabler_percent', BY_HOUR)[0]['values']
-        chart_times = charts._chart('four_tabler_percent', BY_HOUR)[0]['dates']
+        chart_values = [value[1] for value in charts._get_chart_data('four_tabler_percent', BY_HOUR)]
+        chart_times = [value[0] for value in charts._get_chart_data('four_tabler_percent', BY_HOUR)]
         self.assertAlmostEqual(chart_values[chart_times.index(self.now.hour)], 30, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.one_hour_before.hour)], 66.6, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.two_hours_before.hour)], 50, delta=0.1)
         self.assertAlmostEqual(chart_values[chart_times.index(self.three_hours_before.hour)], 50, delta=0.1)
 
-        chart_values = charts._chart('one_tabler_percent', LAST_24)[0]['values']
+        chart_values = [value[1] for value in charts._get_chart_data('one_tabler_percent', LAST_24)]
         self.assertAlmostEqual(chart_values[0], 25, delta=0.1)
         self.assertAlmostEqual(chart_values[1], 25, delta=0.1)
         self.assertAlmostEqual(chart_values[2], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[3], 40, delta=0.1)
 
-        chart_values = charts._chart('two_tabler_percent', LAST_24)[0]['values']
+        chart_values = [value[1] for value in charts._get_chart_data('two_tabler_percent', LAST_24)]
         self.assertAlmostEqual(chart_values[0], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[1], 25, delta=0.1)
         self.assertAlmostEqual(chart_values[2], 33.3, delta=0.1)
         self.assertAlmostEqual(chart_values[3], 0, delta=0.1)
 
-        chart_values = charts._chart('three_tabler_percent', LAST_24)[0]['values']
+        chart_values = [value[1] for value in charts._get_chart_data('three_tabler_percent', LAST_24)]
         self.assertAlmostEqual(chart_values[0], 25, delta=0.1)
         self.assertAlmostEqual(chart_values[1], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[2], 0, delta=0.1)
         self.assertAlmostEqual(chart_values[3], 20, delta=0.1)
 
-        chart_values = charts._chart('four_tabler_percent', LAST_24)[0]['values']
+        chart_values = [value[1] for value in charts._get_chart_data('four_tabler_percent', LAST_24)]
         self.assertAlmostEqual(chart_values[0], 50, delta=0.1)
         self.assertAlmostEqual(chart_values[1], 50, delta=0.1)
         self.assertAlmostEqual(chart_values[2], 66.6, delta=0.1)
