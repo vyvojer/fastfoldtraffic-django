@@ -51,10 +51,15 @@ def _init():
         'entry_count': _Chart("Entry Count", fields=[_FIELDS['entry_count']]),
         'player_count': _Chart("Players", fields=[_FIELDS['entry_count'], _FIELDS['unique_player_count']]),
         'mtr': _Chart("Multi Table Ratio", fields=[_FIELDS['mtr']]),
-        'one_tabler_percent': _Chart("One-tabler Percent", fields=[_FIELDS['one_tabler_percent']]),
-        'two_tabler_percent': _Chart("One-tabler Percent", fields=[_FIELDS['two_tabler_percent']]),
-        'three_tabler_percent': _Chart("One-tabler Percent", fields=[_FIELDS['three_tabler_percent']]),
-        'four_tabler_percent': _Chart("One-tabler Percent", fields=[_FIELDS['four_tabler_percent']]),
+        'one_tabler_percent': _Chart("One-tablers Percent", fields=[_FIELDS['one_tabler_percent']]),
+        'two_tabler_percent': _Chart("Two-tablers Percent", fields=[_FIELDS['two_tabler_percent']]),
+        'three_tabler_percent': _Chart("Three-tablers Percent", fields=[_FIELDS['three_tabler_percent']]),
+        'four_tabler_percent': _Chart("Four-tablers Percent", fields=[_FIELDS['four_tabler_percent']]),
+        'multi_tablers_percent': _Chart("Multi-tablers", fields=[_FIELDS['one_tabler_percent'],
+                                                                _FIELDS['two_tabler_percent'],
+                                                                _FIELDS['three_tabler_percent'],
+                                                                _FIELDS['four_tabler_percent'],
+                                                                ]),
         'average_pot': _Chart("Average Pot", fields=[_FIELDS['average_pot']]),
         'players_per_flop': _Chart("Players Per Flop", fields=[_FIELDS['players_per_flop']]),
     }
@@ -106,7 +111,7 @@ class Charts:
     def _render_chart(chart: _Chart, chart_type: str, fields: list, datas: list):
         options = {}
 
-        if chart.title == "Multi-tablers":
+        if chart.title == "Multi-tablers" and chart_type == 'last_24':
             pyg_chart = pygal.StackedLine()
         elif chart_type in ['spark', 'last_24']:
             pyg_chart = pygal.DateTimeLine()
