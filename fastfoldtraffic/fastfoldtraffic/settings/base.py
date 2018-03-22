@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'fastfoldtraffic',
     'traffic',
     'rest_framework',
-    'sitetree',
 ]
 
 MIDDLEWARE = [
