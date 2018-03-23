@@ -4,20 +4,25 @@
 {% block body %}
     <h4>{{ table.limit_str }} {{ table.name }}. By Weekday (UTC)</h4>
     <div class="row">
-        <div class="col-sm-12">
-            {{ charts.player_count_chart_by_weekday|safe }}
+        <div class="col-sm-10">
+            <div>
+                {{ charts.player_count_chart_by_weekday|safe }}
+            </div>
+            <div>
+                {{ charts.mtr_chart_by_weekday|safe }}
+            </div>
+            <div>
+                {{ charts.multi_tablers_percent_chart_by_weekday|safe }}
+            </div>
+            <div>
+                {{ charts.players_per_flop_chart_by_weekday|safe }}
+            </div>
+            <div>
+                {{ charts.average_pot_chart_by_weekday|safe }}
+            </div>
         </div>
-        <div class="col-sm-12">
-            {{ charts.mtr_chart_by_weekday|safe }}
-        </div>
-        <div class="col-sm-12">
-            {{ charts.multi_tablers_percent_chart_by_weekday|safe }}
-        </div>
-        <div class="col-sm-12">
-            {{ charts.players_per_flop_chart_by_weekday|safe }}
-        </div>
-        <div class="col-sm-12">
-            {{ charts.average_pot_chart_by_weekday|safe }}
+        <div class="col-sm-2">
+            {% include "traffic/table_sidebar.html" %}
         </div>
     </div>
 {% endblock %}

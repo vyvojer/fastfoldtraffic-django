@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -51,6 +52,10 @@ class Table(models.Model):
 
     def __str__(self):
         return "{} [{} {}] {} max".format(self.name, self.game, self.limit, self.max_players)
+
+    @property
+    def slug(self):
+        return slugify(self.name)
 
     def limit_str(self):
         if self.max_players != 6:

@@ -6,12 +6,15 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-48265923-3"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
+
         function gtag() {
             dataLayer.push(arguments);
         }
+
         gtag('js', new Date());
         gtag('config', 'UA-48265923-3');
-    </script>    <meta charset="UTF-8">
+    </script>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock %} - FastFoldTraffic.com Beta</title>
     <!-- Bootstrap core CSS -->
@@ -20,9 +23,14 @@
 
 </head>
 <body>
-<nav class="navbar navbar-light bg-light">
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
     <a class="navbar-brand" href="/">FastFoldTraffic - Beta</a>
-
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            {% url 'traffic:index' as the_url %}
+            <a class="nav-link {% if the_url == view.request.path %}active{% endif %}" href="{{ the_url }}">Home</a>
+        </li>
+    </ul>
 </nav>
 <main role="main" class="container">
     <br/>
